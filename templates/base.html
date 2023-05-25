@@ -1,5 +1,6 @@
+
 <!DOCTYPE html>
-{% load static %} {% load bootstrap5 %} {% bootstrap_css %}
+{% load static %} {% load django_bootstrap5 %}  {% bootstrap_css %}
 
 <!-- my version of bootsrap 5 -->
 <!-- https://pypi.org/project/django-bootstrap5/ -->
@@ -11,9 +12,9 @@
 		{% comment %} <link rel="stylesheet" type="text/css" href="{% static 'css/style.css'%}" /> {% endcomment %}
 	</head>
 	<body class='bg-secondary '>
-		<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+		<!-- <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
 			Madani Blog
-		</nav>
+		</nav> -->
 
 			<nav class="navbar navbar-expand-sm  bg-light">
 			<div class="container-fluid">
@@ -46,5 +47,6 @@
 			  </div>
 			</div>
 		  </nav>
+		  {% block content %}{% endblock %}
 	</body>
 </html>
