@@ -15,10 +15,11 @@ class Post(models.Model):
         default=datetime.now, blank=True)
 
     def save(self, *args, **kwargs):
-        if datetime.now().astimezone() > self.modification_datetime:
-            self.modification_datetime = datetime.now()
+        self.modification_datetime = datetime.now()
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return self.title;
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
