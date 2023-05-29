@@ -1,16 +1,32 @@
-html, body {
-    height: 100%;
+/* html,
+body {
+	height: 100%;
 }
 
 body {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 .content {
-    flex: 1;
+	flex: 1;
 }
 
 .footer {
-    flex-shrink: 0;
+	flex-shrink: 0;
+} */
+
+/* profile module */
+@media only screen and (max-width: 768px) {
+	#profile-picture {
+		width: 96px;
+		height: 96px;
+	}
+}
+
+@media only screen and (min-width: 1200px) {
+	#profile-picture {
+		width: 160px;
+		height: 160px;
+	}
 }
