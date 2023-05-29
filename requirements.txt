@@ -1,5 +1,7 @@
 crispy-bootstrap5
 Django
 django-autoslug
+django-bootstrap-icons
 django-bootstrap5
 django-crispy-forms
+Pillow
