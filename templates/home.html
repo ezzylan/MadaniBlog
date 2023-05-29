@@ -1,8 +1,61 @@
-{% extends "base.html" %}
-{% load static %}
-{% block content %}
-<div>
-    <h1>2</h1>
-</div>
+{% extends 'base.html' %}
 
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h2>Latest Posts</h2>
+        </div>
+        <div class="card-body">
+          {% for post in latest_posts %}
+          <div class="card mb-3">
+            <div class="card-body">
+              <h3 class="card-title">{{ post.title }}</h3>
+              <p class="card-text">{{ post.content }}</p>
+              <a href="{% url 'post_detail' post.id %}" class="btn btn-primary">Read more &rarr;</a>
+            </div>
+            <div class="card-footer text-muted">
+              Posted {{ post.created_at|date:'F d, Y' }} by {{ post.author }}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header">
+          <h2>Popular Posts</h2>
+        </div>
+        <div class="card-body">
+          {% for post in popular_posts %}
+          <div class="card mb-3">
+            <div class="card-body">
+              <h3 class="card-title">{{ post.title }}</h3>
+              <p class="card-text">{{ post.content }}</p>
+              <a href="{% url 'post_detail' post.id %}" class="btn btn-primary">Read more &rarr;</a>
+            </div>
+            <div class="card-footer text-muted">
+              Posted {{ post.created_at|date:'F d, Y' }} by {{ post.author }}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h2>About</h2>
+        </div>
+        <div class="card-body">
+          <p class="card-text">This is a blog where I write about my life experiences.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
 {% endblock %}
