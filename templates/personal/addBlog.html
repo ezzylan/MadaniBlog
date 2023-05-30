@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/personal.css'%}" />
+<div class="container overflow-hidden">
+    <div class="row g-2">
+        <div class="col-md-8">
+            <div class="p-4 border bg-light">
+                <h4>Write a new post</h4>
+                <form method="POST"  enctype="multipart/form-data">
+                    <div class="form-floating">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-outline-dark" type="submit">Add Post</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+         <div class="col-md-4">
+            <div class="p-4 border bg-light">
+                My Post
+                {% for p in posts %}
+                <div class="post-link border-bottom  pt-3 pb-3">
+                    <span class="text-black-50">{{p.modification_datetime.date}}</span>
+                    <h6 class="mb-2"><a href="#">{{p.title}}</a></h6>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -38,7 +38,7 @@ class Comment(models.Model):
 
 
 class Blogger(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,related_name="profile")
     profile_image = models.ImageField(
         upload_to=user_directory_path,
         default=static("images/placeholder-profile-icon.jpg"),
@@ -58,10 +58,10 @@ class Blogger(models.Model):
     blog_image = models.ImageField(upload_to=user_directory_path, blank=True)
 
     following_users = models.ManyToManyField(
-        User, related_name="following_user", default="null"
+        User, related_name="following_user", default="null",null=True,blank=True
     )
-    follower = models.ManyToManyField(User, related_name="follower", default="null")
-    fav_post = models.ManyToManyField(Post, default="null")
+    follower = models.ManyToManyField(User, related_name="follower", default="null",null=True,blank=True)
+    fav_post = models.ManyToManyField(Post, default="null",null=True,blank=True)
     slug = AutoSlugField(populate_from="user")
 
 

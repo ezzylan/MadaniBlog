@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap_icons %}
+{% load mathfilters %}
+{% block title %}
+My Blog
+{% endblock %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/personal.css'%}" />
+<section name="blogInfo">
+    <div class="overflow-hidden ms-5 me-5 ps-2 pe-2">
+        <div class="container" >
+            <div class="row">
+                <div class="personal-banner">
+                    <img src="{% static 'image/post-slide-1.jpg' %}" >
+                    <div class="centered-text-img text-light">
+                        <h2>{{user.blogger.blog_title}}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 mt-3 bg-dark">
+                <div class = "row text-light text-center p-sm-5">
+
+                       {{user.blogger.blog_description}}
+                    <div>
+                        --{{user.date_joined.date}}--
+                    </div>
+                </div>
+            </div>
+            <div class="row g-2 ">
+                <div class="col-md-8">
+                    <div class="p-4 border bg-light">
+                        <h4>Recent Post</h4>
+                        <div class="row g-5">
+                        {% for post in personal_post|slice:":4" %}
+                        {% if  forloop.first %}
+                            <div class="col post-link">
+                                <a href="single-post.html"><img src="{% get_media_prefix %}{{ post.image}}" alt="{{post.slug}}" class="img-fluid"></a>
+                                <div class="post-meta"><span>{{post.modification_datetime.date}}</span></div>
+                                <h4><a href="single-post.html">{{post.title}}</a></h4>
+                                <p class="mb-4 d-block ">{{post.content}}</p>
+                            </div>
+                        {% else %}
+                        {% if forloop.counter0|sub:1|divisibleby:3 %}
+                            <div class="col border-start custom-border">
+                            {% endif %}
+                                <div class="post-entry-1 post-link">
+                                    <a href="single-post.html" class="post-link" ><img src="assets/img/post-landscape-2.jpg" alt="" class="img-fluid"></a>
+                                    <div class="post-meta"><span class="date">{{post.modification_datetime.date}}</span></div>
+                                    <h5><a href="single-post.html">{{post.title}}</a></h5>
+                                </div>
+                            {% if forloop.counter0|divisibleby:3 %}
+                            </div>
+                            {% endif %}
+                            {% endif%}
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                    <div class="mt-2 border bg-light">
+                        <div class="text-center bg-dark text-light p-2">
+                            <h6>All Post</h6>
+                        </div>
+                        {% for p in personal_post %}
+                        <a href="#" class="text-decoration-none text-dark">
+                            <div class="post-link border-bottom  pt-3 pb-3">
+                                <div class="row pe-4 ps-4">
+                                    <div class="col-md-10">
+                                        <span class="text-black-50">{{p.modification_datetime.date}}</span>
+                                        <h6 class="mb-2">{{p.title}}</h6>
+                                    </div>
+                                    <div class="col-md-1 text-end">{% bs_icon 'chat' %}{{p.comment_set.count}} </div>
+                                    <div class="col-md-1 text-end">{% bs_icon 'heart' %}{{p.blogger_set.count}}</div>
+                                </div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 border bg-light">
+                        Popular Post
+                        {% for p in personal_post|dictsortreversed:"num_fav"|slice:":5" %}
+                        <div class="post-link border-bottom  pt-3 pb-3">
+                            <span class="text-black-50">{{p.modification_datetime.date}}</span>
+                            <h6 class="mb-2"><a href="#">{{p.title}}</a></h6>
+                        </div>
+                    {% endfor %}
+
+                    </div>
+                </div>
+
+       </div>
+   </div>
+
+   </div>
+</section>
+{% endblock %}
