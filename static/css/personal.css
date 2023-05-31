@@ -41,3 +41,21 @@
   text-decoration: none;
 }
 
+.post-content-preview {
+  /* the line height must be known */
+  line-height: 2.5ex;
+}
+
+.post-content-preview .truncated {
+  /* restrict the height to three lines */
+  height: calc(2.5ex * 3);
+
+  /* hide the overflow */
+  overflow: hidden;
+}
+
+.avatar {
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+}

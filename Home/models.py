@@ -17,6 +17,9 @@ def user_directory_path(instance, filename):
 class Tag(models.Model):
     label_tag = models.CharField(max_length=20)
 
+    def __str__(self):
+        return self.label_tag
+
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
@@ -31,7 +34,7 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         self.modification_datetime = datetime.now()
         self.slug = '%i-%s' % (
-            self.id,slugify(self.author.username)
+            self.author.id,slugify(self.title)
         )
         super().save(*args, **kwargs)
 

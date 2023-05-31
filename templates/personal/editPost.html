@@ -10,9 +10,13 @@
                 <h4>Write a new post</h4>
                 <form method="POST"  enctype="multipart/form-data">
                     <div class="form-floating">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button class="btn btn-outline-dark" type="submit">Add Post</button>
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        Current Image:
+                        <br/>
+                        <img src="{% get_media_prefix %}{{post.image}}" class="img-thumbnail">
+
+                        <button class="btn btn-outline-dark mt-5" type="submit">Save</button>
                     </div>
                 </form>
             </div>
