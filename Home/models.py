@@ -25,13 +25,13 @@ class Post(models.Model):
     video = models.FileField(upload_to=user_directory_path, null=True, default="null")
     creation_datetime = models.DateTimeField(auto_now=True)
     modification_datetime = models.DateTimeField(default=datetime.now, blank=True)
-    slug = models.SlugField(default='null',null=True,blank=True)
-    tag = models.ManyToManyField(Tag,default='null')
+    slug = models.SlugField(default='null', null=True, blank=True)
+    tag = models.ManyToManyField(Tag, default='null')
 
     def save(self, *args, **kwargs):
         self.modification_datetime = datetime.now()
         self.slug = '%i-%s' % (
-            self.id,slugify(self.author.username)
+            self.author.id, slugify(self.title)
         )
         super().save(*args, **kwargs)
 
@@ -42,7 +42,7 @@ class Post(models.Model):
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     comment = models.TextField()
-    blogger = models.ForeignKey(User, on_delete=models.CASCADE,related_name="comment_user")
+    blogger = models.ForeignKey(User, on_delete=models.CASCADE,related_name="comment_user",default="null",blank=True,null=True)
     published_date = models.DateTimeField(auto_now=True)
 
 
@@ -62,7 +62,7 @@ class Blogger(models.Model):
     website_link = models.URLField(blank=True)
 
     # blog info
-    blog_title = models.CharField(max_length=500)
+    blog_title = models.CharField(max_length=500,default="null",blank=True,null=True)
     blog_description = models.TextField(blank=True)
     blog_image = models.ImageField(upload_to=user_directory_path, blank=True)
 
@@ -71,7 +71,7 @@ class Blogger(models.Model):
     )
     follower = models.ManyToManyField(User, related_name="follower", default="null",null=True,blank=True)
     fav_post = models.ManyToManyField(Post, default="null",null=True,blank=True)
-    slug = AutoSlugField(populate_from="user")
+    slug = AutoSlugField(populate_from="user",default="null",blank=True,null=True)
 
 
 @receiver(post_save, sender=User)
