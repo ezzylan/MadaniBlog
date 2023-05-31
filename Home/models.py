@@ -5,14 +5,17 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.templatetags.static import static
 from autoslug import AutoSlugField
+from django.template.defaultfilters import slugify
 
 
 def user_directory_path(instance, filename):
     if isinstance(instance, Post):
-        return "user_{0}/posts/{1}".format(instance.user.id, filename)
+        return "user_{0}/posts/{1}".format(instance.author.id, filename)
     elif isinstance(instance, Blogger):
         return "user_{0}/bloggers/{1}".format(instance.user.id, filename)
 
+class Tag(models.Model):
+    label_tag = models.CharField(max_length=20)
 
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -22,9 +25,14 @@ class Post(models.Model):
     video = models.FileField(upload_to=user_directory_path, null=True, default="null")
     creation_datetime = models.DateTimeField(auto_now=True)
     modification_datetime = models.DateTimeField(default=datetime.now, blank=True)
+    slug = models.SlugField(default='null',null=True,blank=True)
+    tag = models.ManyToManyField(Tag,default='null')
 
     def save(self, *args, **kwargs):
         self.modification_datetime = datetime.now()
+        self.slug = '%i-%s' % (
+            self.id,slugify(self.author.username)
+        )
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -34,11 +42,12 @@ class Post(models.Model):
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     comment = models.TextField()
+    blogger = models.ForeignKey(User, on_delete=models.CASCADE,related_name="comment_user")
     published_date = models.DateTimeField(auto_now=True)
 
 
 class Blogger(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,related_name="profile")
     profile_image = models.ImageField(
         upload_to=user_directory_path,
         default=static("images/placeholder-profile-icon.jpg"),
@@ -58,10 +67,10 @@ class Blogger(models.Model):
     blog_image = models.ImageField(upload_to=user_directory_path, blank=True)
 
     following_users = models.ManyToManyField(
-        User, related_name="following_user", default="null"
+        User, related_name="following_user", default="null",null=True,blank=True
     )
-    follower = models.ManyToManyField(User, related_name="follower", default="null")
-    fav_post = models.ManyToManyField(Post, default="null")
+    follower = models.ManyToManyField(User, related_name="follower", default="null",null=True,blank=True)
+    fav_post = models.ManyToManyField(Post, default="null",null=True,blank=True)
     slug = AutoSlugField(populate_from="user")
 
 
