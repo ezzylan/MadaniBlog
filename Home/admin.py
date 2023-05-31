@@ -5,10 +5,12 @@ from django.contrib.auth.models import User
 from .models import Blogger
 from .models import Post
 from .models import Comment
+from .models import Tag
 # Register your models here.
 
 admin.site.register(Post)
 admin.site.register(Comment)
+admin.site.register(Tag)
 
 
 class BloggerInline(admin.StackedInline):
