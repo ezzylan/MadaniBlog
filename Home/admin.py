@@ -12,7 +12,6 @@ admin.site.register(Post)
 admin.site.register(Comment)
 admin.site.register(Tag)
 
-
 class BloggerInline(admin.StackedInline):
     model = Blogger
     can_delete = False
