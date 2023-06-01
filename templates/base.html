@@ -24,7 +24,11 @@
 		<nav class="navbar navbar-expand-sm bg-light">
 			<div class="container">
 				<a class="navbar-brand link-dark" href="http://127.0.0.1:8000">MadaniBlog</a>
-
+				<form class="d-flex"  method="post" action="/search/">
+					{% csrf_token %}
+					<input class="form-control me-2"  type="text" name="search_term" placeholder="Search">
+					<button class="btn btn-outline-success" type="submit">Search</button>
+				  </form>
 				{% comment %} <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
 					<span class="navbar-toggler-icon"></span>
 				</button> {% endcomment %}

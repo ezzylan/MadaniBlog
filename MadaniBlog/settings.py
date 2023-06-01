@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'django_bootstrap5',
-    'mathfilters',
+   
     'django_bootstrap_icons'
 ]
 
