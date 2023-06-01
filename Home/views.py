@@ -18,8 +18,12 @@ def post_list(request):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
+    latest_posts = Post.objects.order_by('-creation_datetime')[:3]
+    tag = Tag.objects.all()
     context = {
-        'post': post
+        'post': post,
+        'latest_posts':latest_posts,
+        'tag':tag
     }
     return render(request, 'post_detail.html', context)
 
