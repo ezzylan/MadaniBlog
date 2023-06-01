@@ -16,6 +16,8 @@ def user_directory_path(instance, filename):
 
 class Tag(models.Model):
     label_tag = models.CharField(max_length=20)
+    def __str__(self):
+        return self.label_tag
 
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -25,13 +27,13 @@ class Post(models.Model):
     video = models.FileField(upload_to=user_directory_path, null=True, default="null")
     creation_datetime = models.DateTimeField(auto_now=True)
     modification_datetime = models.DateTimeField(default=datetime.now, blank=True)
-    slug = models.SlugField(default='null', null=True, blank=True)
-    tag = models.ManyToManyField(Tag, default='null')
+    slug = models.SlugField(default='null',null=True,blank=True)
+    tag = models.ManyToManyField(Tag,default='null')
 
     def save(self, *args, **kwargs):
         self.modification_datetime = datetime.now()
         self.slug = '%i-%s' % (
-            self.author.id, slugify(self.title)
+            self.author.id,slugify(self.title)
         )
         super().save(*args, **kwargs)
 

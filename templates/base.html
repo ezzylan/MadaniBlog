@@ -24,6 +24,7 @@
 		<nav class="navbar navbar-expand-sm bg-light">
 			<div class="container">
 				<a class="navbar-brand link-dark" href="http://127.0.0.1:8000">MadaniBlog</a>
+
 				{% comment %} <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
 					<span class="navbar-toggler-icon"></span>
 				</button> {% endcomment %}
@@ -35,11 +36,11 @@
 						</div>
 					</button>
 					<div class="dropdown-menu dropdown-menu-end">
-						<li><a class="dropdown-item" href="">My Profile</a></li>
-						<li><a class="dropdown-item" href="">My Blog</a></li>
+						<li><a class="dropdown-item" href="#">My Profile</a></li>
+						<li><a class="dropdown-item" href="{% url 'Personal:view' %}">My Blog</a></li>
 					</div>
 				</div>
-				{% comment %} <a class="nav-link link-secondary" href="">
+				{% comment %} <a class="nav-link link-secondary" href="#">
 					Profile
 				</a> {% endcomment %}
 			</div>
@@ -51,7 +52,7 @@
 						<a class="nav-link" href="">Home</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="">My Blogs</a>
+						<a class="nav-link" href="{% url 'Personal:view' %}">My Blogs</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="">profile</a>
@@ -68,6 +69,7 @@
 	<main class="container p-4">
 		{% block content %}{% endblock %}
 	</main>
+
 
 	<footer class="mt-auto py-1 bg-dark">
 		<div class="container">
