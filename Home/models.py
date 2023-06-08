@@ -49,7 +49,7 @@ class Comment(models.Model):
 
 
 class Blogger(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE,related_name="profile")
+    user = models.OneToOneField(User, on_delete=models.CASCADE,related_name="profile",primary_key=True)
     profile_image = models.ImageField(
         upload_to=user_directory_path,
         default=static("images/placeholder-profile-icon.jpg"),
