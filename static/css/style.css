@@ -1,22 +1,4 @@
-/* html,
-body {
-	height: 100%;
-}
 
-body {
-	display: flex;
-	flex-direction: column;
-}
-
-.content {
-	flex: 1;
-}
-
-.footer {
-	flex-shrink: 0;
-} */
-
-/* profile module */
 @media only screen and (max-width: 768px) {
 	#profile-picture {
 		width: 96px;
@@ -124,3 +106,23 @@ body {
 	width: 100%;
 	margin-left: 10px;
   }
+.post-link a {
+  color: var(--color-links);
+ text-decoration: none;
+
+}
+
+.post-link a:hover {
+  color: var(--color-links-hover);
+  text-decoration: none;
+}
+
+.post-image{
+    width: 250px;
+    height:230px;
+    object-fit:cover;
+}
+.text-justify{
+  text-align: justify;
+  text-justify: inter-word;
+}

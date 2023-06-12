@@ -20,7 +20,7 @@ class AddBlogPostForm(ModelForm):
             'content':forms.Textarea(attrs={'class':'form-control'}),
             'image':forms.FileInput(attrs={'class':'form-control w-50'}),
             'video':forms.FileInput(attrs={'class':'form-control w-50'}),
-            'tag':forms.CheckboxSelectMultiple()
+            'category':forms.CheckboxSelectMultiple()
         }
 
 class AddCommentsForm(ModelForm):

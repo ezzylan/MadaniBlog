@@ -14,7 +14,7 @@
 
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 
 	<title>{% block title %}{% endblock %} - MadaniBlog</title>
 </head>
@@ -36,7 +36,7 @@
 					<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 						{% bs_icon 'person-circle' %}&nbsp;
 						<div class="d-none d-sm-inline">
-							Chris
+							{{request.user.username}}
 						</div>
 					</button>
 					<div class="dropdown-menu dropdown-menu-end">
