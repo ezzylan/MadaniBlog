@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% load bootstrap_icons %}
+{% load static %}
+
+{% block title %}{{ blogger_user.get_full_name }}{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column gap-4">
+  <div class="row g-3">
+    <div class="col-12 col-md-2">
+      {% if blogger.profile_image %}
+      <img id="profile-picture" src="{{ MEDIA_URL }}{{ blogger.profile_image }}"
+        class="shadow rounded-circle ratio ratio-1x1" alt="profile picture">
+      {% else %}
+      <img id="profile-picture" src="{% static 'images/placeholder-profile-icon.jpg' %}"
+        class="shadow rounded-circle ratio ratio-1x1" alt="profile picture">
+      {% endif %}
+    </div>
+    <div class="col-12 col-md-8">
+      <div class="d-flex flex-column">
+        <h3>{{ blogger_user.get_full_name }}</h3>
+
+        {% if blogger.tagline %}
+        <p>{{ blogger.tagline }}</p>
+        {% else %}
+        <p class="d-none"></p>
+        {% endif %}
+
+        <div class="d-flex gap-3">
+          <p><strong>{{ blogger.follower.count }}</strong> Followers</p>
+          <p><strong>{{ blogger.following_users.count }}</strong> Following</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-2">
+      <div>
+        {% if user == blogger_user %}
+        <a class="btn btn-primary" href="{% url 'Profile:edit-profile' blogger.slug %}" role="button">
+          {% bs_icon 'pencil' %}&nbsp;Edit
+        </a>
+        {% else %}
+
+        <form action="{% url 'Profile:profile' blogger.slug %}" method="post">
+          {% csrf_token %}
+          {% if blogger_user in user.blogger.following_users.all %}
+          <button class="btn btn-outline-primary" type="submit" name="unfollow">
+            {% bs_icon 'person-check' %}&nbsp;Followed
+          </button>
+          {% else %}
+          <button class="btn btn-primary" type="submit" name="follow">
+            {% bs_icon 'person-plus' %}&nbsp;Follow
+          </button>
+          {% endif %}
+        </form>
+
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-12 col-md-3">
+      {% if blogger.twitter_link or blogger.instagram_link or blogger.facebook_link or blogger.website_link %}
+      <div class="container p-3 border rounded">
+        <h5>Contact Info</h5>
+        <div class="d-flex flex-column gap-2">
+          {% if blogger.twitter_link %}
+          <a href="{{ blogger.twitter_link }}" class="text-decoration-none text-reset">
+            {% bs_icon 'twitter' %}&nbsp;Twitter
+          </a>
+          {% endif %}
+
+          {% if blogger.instagram_link %}
+          <a href="{{ blogger.instagram_link }}" class="text-decoration-none text-reset">
+            {% bs_icon 'instagram' %}&nbsp;Instagram
+          </a>
+          {% endif %}
+
+          {% if blogger.facebook_link %}
+          <a href="{{ blogger.facebook_link }}" class="text-decoration-none text-reset">
+            {% bs_icon 'facebook' %}&nbsp;Facebook
+          </a>
+          {% endif %}
+
+          {% if blogger.website_link %}
+          <a href="{{ blogger.website_link }}" class="text-decoration-none text-reset">
+            {% bs_icon 'link-45deg' %}&nbsp;Website
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="col-12 col-md-9">
+      {% if blogger.bio %}
+      <div class="container pt-3 px-3 border rounded">
+        <h5>About Me</h5>
+        <p>{{ blogger.bio }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="container p-3 border rounded">
+    <h5>Writes at</h5>
+    <hr>
+    {% if blogger.blog_title %}
+    <h6>{{ blogger.blog_title }}</h6>
+    <a class="btn btn-outline-secondary" href="#" role="button">
+      {% bs_icon 'arrow-up-right' %}&nbsp;Read the blog
+    </a>
+    {% else %}
+    <p class="text-body-secondary">You haven't started a blog yet. Start your blogging journey here...</p>
+    <a class="btn btn-outline-secondary" href="#" role="button">
+      {% bs_icon 'arrow-up-right' %}&nbsp;Create a new blog
+    </a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
