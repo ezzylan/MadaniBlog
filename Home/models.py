@@ -3,8 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.templatetags.static import static
-from autoslug import AutoSlugField
+from django.urls import reverse
 from django.template.defaultfilters import slugify
 
 
@@ -14,10 +13,13 @@ def user_directory_path(instance, filename):
     elif isinstance(instance, Blogger):
         return "user_{0}/bloggers/{1}".format(instance.user.id, filename)
 
+
 class Tag(models.Model):
     label_tag = models.CharField(max_length=20)
+
     def __str__(self):
         return self.label_tag
+
 
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -27,14 +29,12 @@ class Post(models.Model):
     video = models.FileField(upload_to=user_directory_path, null=True, default="null")
     creation_datetime = models.DateTimeField(auto_now=True)
     modification_datetime = models.DateTimeField(default=datetime.now, blank=True)
-    slug = models.SlugField(default='null',null=True,blank=True)
-    tag = models.ManyToManyField(Tag,default='null')
+    slug = models.SlugField(default="null", null=True, blank=True)
+    tag = models.ManyToManyField(Tag, default="null")
 
     def save(self, *args, **kwargs):
         self.modification_datetime = datetime.now()
-        self.slug = '%i-%s' % (
-            self.author.id,slugify(self.title)
-        )
+        self.slug = "%i-%s" % (self.author.id, slugify(self.title))
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -44,15 +44,22 @@ class Post(models.Model):
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     comment = models.TextField()
-    blogger = models.ForeignKey(User, on_delete=models.CASCADE,related_name="comment_user",default="null",blank=True,null=True)
+    blogger = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="comment_user",
+        default="null",
+        blank=True,
+        null=True,
+    )
     published_date = models.DateTimeField(auto_now=True)
 
 
 class Blogger(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE,related_name="profile",primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     profile_image = models.ImageField(
         upload_to=user_directory_path,
-        default=static("images/placeholder-profile-icon.jpg"),
+        blank=True,
     )
     tagline = models.CharField(max_length=100, blank=True)
     bio = models.TextField(blank=True)
@@ -64,16 +71,25 @@ class Blogger(models.Model):
     website_link = models.URLField(blank=True)
 
     # blog info
-    blog_title = models.CharField(max_length=500,default="null",blank=True,null=True)
+    blog_title = models.CharField(max_length=500, blank=True, null=True)
     blog_description = models.TextField(blank=True)
     blog_image = models.ImageField(upload_to=user_directory_path, blank=True)
 
     following_users = models.ManyToManyField(
-        User, related_name="following_user", default="null",null=True,blank=True
+        User, related_name="following_user", default="null", null=True, blank=True
     )
-    follower = models.ManyToManyField(User, related_name="follower", default="null",null=True,blank=True)
-    fav_post = models.ManyToManyField(Post, default="null",null=True,blank=True)
-    slug = AutoSlugField(populate_from="user",default="null",blank=True,null=True)
+    follower = models.ManyToManyField(
+        User, related_name="follower", default="null", null=True, blank=True
+    )
+    fav_post = models.ManyToManyField(Post, default="null", null=True, blank=True)
+    slug = models.SlugField(default="null", null=False, unique=True)
+
+    def get_absolute_url(self):
+        return reverse("Profile:profile", kwargs={"slug": self.slug})
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.user.get_username())
+        return super().save(*args, **kwargs)
 
 
 @receiver(post_save, sender=User)
@@ -84,4 +100,4 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
+    instance.blogger.save()
