@@ -39,7 +39,7 @@ Post Detail
                     {% for comment in post.comment_set.all %}
                     <div class="d-flex mb-4 p-2">
                         <div class="flex-shrink-0">
-                            <img class="avatar rounded-circle img-fluid" src="{{comment.blogger.profile.profile_image}}" alt="">
+                            <img class="avatar rounded-circle img-fluid" src="{% get_media_prefix %}{{comment.blogger.blogger.profile_image}}" alt="">
                         </div>
                         <div class="flex-grow-1 ms-2 ms-sm-3">
                             <div class="d-flex align-items-baseline">
@@ -102,7 +102,7 @@ Post Detail
                         <li>
                             <a href="{% url 'Home:tag_posts' tag_id=tag.id %}">
                                 <button class="btn btn-dark rounded-5 mb-1" type="button">
-                                    {{tag.label_tag}}
+                                    {{tag.label_tag}} {{tag.post_set.count}}
                                 </button>
                             </a>
                         </li>

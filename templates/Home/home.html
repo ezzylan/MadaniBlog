@@ -16,7 +16,7 @@
                 <p class="lead my-3 ">Your trusted source for insightful political analysis, comprehensive coverage, and engaging discussions on Malaysia's political landscape. </p>
             </div>
             <div class="col-lg-4">
-                <img src="{% static 'Image/Blog.png' %}" alt="" class="img-fluid">
+                <img src="{% static 'images/Blog.png' %}" alt="" class="img-fluid">
             </div>
         </div>
     </div>
@@ -100,7 +100,7 @@
             <li>
                 <a href="{% url 'Home:tag_posts' tag_id=tag.id %}">
                     <button class="btn btn-dark rounded-5 mb-1" type="button">
-                        {{tag.label_tag}}
+                        {{tag.label_tag}} {{tag.post_set.count}}
                     </button>
                 </a>
             </li>

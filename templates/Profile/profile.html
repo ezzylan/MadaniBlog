@@ -1,10 +1,7 @@
 {% extends 'base.html' %}
-
 {% load bootstrap_icons %}
 {% load static %}
-
 {% block title %}{{ blogger_user.get_full_name }}{% endblock %}
-
 {% block content %}
 <div class="d-flex flex-column gap-4">
   <div class="row g-3">
@@ -108,12 +105,12 @@
     <hr>
     {% if blogger.blog_title %}
     <h6>{{ blogger.blog_title }}</h6>
-    <a class="btn btn-outline-secondary" href="#" role="button">
+    <a class="btn btn-outline-secondary" href="{% url 'Personal:view' %}" role="button">
       {% bs_icon 'arrow-up-right' %}&nbsp;Read the blog
     </a>
     {% else %}
     <p class="text-body-secondary">You haven't started a blog yet. Start your blogging journey here...</p>
-    <a class="btn btn-outline-secondary" href="#" role="button">
+    <a class="btn btn-outline-secondary" href="{% url 'Personal:createEditBlog' %}" role="button">
       {% bs_icon 'arrow-up-right' %}&nbsp;Create a new blog
     </a>
     {% endif %}

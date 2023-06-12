@@ -6,9 +6,9 @@
 <div class="p-2">
     <div class="row">
         <div class="col-md-2 border-end m-2 p-2 text-center"><b>{{user.post_set.count}}</b></br>Posts</div>
-        <div class="col-md-2 border-end m-2 p-2 text-center"><b>{{user.profile.follower.count}}</b></br>Followers</div>
-        <div class="col-md-2 border-end m-2 p-2 text-center"><b>{{user.profile.following_users.count}}</b></br>Followings </div>
-        <div class="col-md-2 m-2 p-2 text-center"><b>{{user.profile.fav_post.count}}</b></br>Favourite Posts</div>
+        <div class="col-md-2 border-end m-2 p-2 text-center"><b>{{user.blogger.follower.count}}</b></br>Followers</div>
+        <div class="col-md-2 border-end m-2 p-2 text-center"><b>{{user.blogger.following_users.count}}</b></br>Followings </div>
+        <div class="col-md-2 m-2 p-2 text-center"><b>{{user.blogger.fav_post.count}}</b></br>Favourite Posts</div>
         <div class="col-md-3 text-center pt-3">
             <div class="text-decoration-none text-dark text-center">
                 <a href="{% url 'Personal:add' %}" class="col text-decoration-none text-start mb-2" >
