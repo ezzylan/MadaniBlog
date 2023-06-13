@@ -3,19 +3,24 @@
 {% load bootstrap_icons %}
 {% load mathfilters %}
 {% block personalPost %}
+{% load crispy_forms_tags %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/personal.css'%}" />
 <div class="row">
         <div class="col-md-8">
-            <div class="p-4 border bg-light">
+            <div class="p-4">
                 <h4>Write a new post</h4>
                 <form method="POST"  enctype="multipart/form-data">
                     <div class="form-floating">
                         {% csrf_token %}
-                        {{ form.as_p }}
+                        {{ form|crispy }}
                         Current Image:
                         <br/>
-                        <img src="{% get_media_prefix %}{{post.image}}" class="img-thumbnail">
-
+                        {% if post.image %}
+                            <img src="{% get_media_prefix %}{{post.image}}" class="img-thumbnail">
+                        {% else %}
+                            No image uploaded yet
+                        {% endif %}
+                        <br/>
                         <button class="btn btn-outline-dark mt-5" type="submit">Save</button>
                     </div>
                 </form>

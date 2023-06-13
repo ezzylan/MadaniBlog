@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
 from Home.models import Post
+from Home.models import Blogger
 from .forms import AddBlogPostForm
 from .forms import AddCommentsForm
 from .forms import CreateBlog
@@ -25,6 +26,15 @@ class BlogPostList(mixins.LoginRequiredMixin,generic.ListView):
 
     def get_queryset(self):
         return Post.objects.filter(author=self.request.user).annotate(num_fav=Count("blogger")).order_by("-modification_datetime")
+
+def BlogPostOther(request,pk):
+    post_list = Post.objects.filter(author__pk=pk ).annotate(num_fav=Count("blogger")).order_by("-modification_datetime")
+    blogger = Blogger.objects.filter(user_id = pk)
+    context = {
+        'post_list':post_list,
+        'profile':blogger
+    }
+    return render(request, 'personal/otherPersonalBlog.html', context)
 
 class ManagePostList(mixins.LoginRequiredMixin,generic.ListView):
     login_url = '/personal/login/'
@@ -51,20 +61,23 @@ class AddPostView(mixins.LoginRequiredMixin,generic.TemplateView):
         form = AddBlogPostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
+            print(form)
             post.author = request.user
             post.save()
+            form.save_m2m()
             title = form.cleaned_data['title']
             content = form.cleaned_data['content']
             image = form.cleaned_data['image']
-            video = form.cleaned_data['video']
             args={
                 'form': form,
                 'title': title,
                 'content': content,
-                'image': image,
-                'video': video
+                'image': image
             }
-        return HttpResponseRedirect(reverse('Personal:view'))
+            return HttpResponseRedirect(reverse('Personal:view'))
+        else:
+            messages.error(request, 'Unable to add new post, please find error shown')
+            return render(request, 'personal/addBlog.html', {'form': form})
 
 class PostCommentDetailView(mixins.LoginRequiredMixin,generic.TemplateView):
     login_url = '/personal/login/'
@@ -113,8 +126,7 @@ class editPostView(mixins.LoginRequiredMixin,generic.TemplateView):
 
     def post(self, request, slug):
         post = Post.objects.filter(slug=slug).first()
-        form = AddBlogPostForm(request.POST,instance=post)
-        print(form.is_valid())
+        form = AddBlogPostForm(request.POST,request.FILES,instance=post)
         if form.is_valid():
             form.save()
             messages.success(request, 'The post has been updated successfully.')
@@ -130,28 +142,32 @@ def deletePostView(request,slug):
 
 class AddBlogView(mixins.LoginRequiredMixin,generic.TemplateView):
     login_url = '/personal/login/'
-    template_name = "personal/createBlog.html"
+    template_name = "personal/createEditBlog.html"
 
     def get(self, request):
-        form = CreateBlog()
+        blog = Blogger.objects.filter(user=request.user).first()
+        form = CreateBlog(instance=blog)
         args={
             'form':form
         }
         return render(request, self.template_name, args)
 
     def post(self, request):
-        form = AddBlogPostForm(request.POST, request.FILES)
+        blog = Blogger.objects.filter(user=request.user).first()
+        form = CreateBlog(request.POST, request.FILES,instance=blog)
         if form.is_valid():
-            blog = request.user.profile
-            blogform = form.save(request.POST,instance=blog)
-            blogform.save()
-            blog_title = blogform.cleaned_data['blog_title']
-            blog_description = blogform.cleaned_data['blog_description']
-            blog_image = blogform.cleaned_data['blog_image']
+            form.save()
+            blog_title = form.cleaned_data['blog_title']
+            blog_description = form.cleaned_data['blog_description']
+            blog_image = form.cleaned_data['blog_image']
             args={
-                'form': blogform,
+                'form': form,
                 'blog_title': blog_title,
                 'blog_description': blog_description,
                 'blog_image': blog_image
             }
-        return HttpResponseRedirect(reverse('Personal:view'))
+            return HttpResponseRedirect(reverse('Personal:view'))
+        else:
+            messages.error(request, 'Unable to create blog, please find error shown')
+            return render(request, 'personal/createEditBlog.html', {'form': form})
+

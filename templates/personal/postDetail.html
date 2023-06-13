@@ -5,12 +5,22 @@
 {% block personalPost %}
 <div class="row">
     <div class = "col-md-8" >
-        <div class="p-4 border bg-light">
+        <div class="p-4">
             {% for singlePost in postBySlug %}
-            <h3 class="text-center">{{singlePost.title}}</h3>
-            <div class="text-end text-secondary p-2 me-3">{{singlePost.modification_datetime.date}}</div>
+            <h3>{{singlePost.title}}</h3>
+            Category:
+            {% for tag in singlePost.category.all %}
+                {{tag}}
+            {% endfor %}
+            <br/>
+            <div class="text-secondary">{{singlePost.modification_datetime.date}}</div>
+
             <div class="p-3">
-                <img src="{% get_media_prefix %}{{ singlePost.image}}" alt="" class="img-fluid">
+                {% if singlePost.image %}
+					<img src="{% get_media_prefix %}{{ singlePost.image}}" alt="{{singlePost.slug}}" class="img-fluid m-2">
+				{% else %}
+					<img src="{% static 'images/blogpost_placeholder.png' %}" alt="{{post.slug}}" class="img-fluid m-2">
+				{% endif %}
             </div>
             <div class="p-5">
                 {{singlePost.content}}
@@ -25,7 +35,7 @@
                     <div class="flex-grow-1 ms-2 ms-sm-3">
                         <div class="d-flex align-items-baseline">
                             <h6 class="me-2">{{comment.blogger}}</h6>
-                            <span class="text-muted">{{comment.published_date.date}}</span>
+                            <span class="text-muted">{{comment.published_date|date:'Y-m-d H:i'}}</span>
                         </div>
                         <div class="comment-body">
                             {{comment.comment}}
