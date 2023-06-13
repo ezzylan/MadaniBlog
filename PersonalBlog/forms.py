@@ -12,15 +12,12 @@ class AddBlogPostForm(ModelForm):
             'title': 'Post Title',
             'content': 'Post Content',
             'image': 'Post Image',
-            'video': 'Post Video',
             'tag':'Hash Tag'
         }
         widgets ={
             'title': forms.TextInput(attrs={'class': 'form-control '}),
             'content':forms.Textarea(attrs={'class':'form-control'}),
-            'image':forms.FileInput(attrs={'class':'form-control w-50'}),
-            'video':forms.FileInput(attrs={'class':'form-control w-50'}),
-            'tag':forms.CheckboxSelectMultiple()
+            'category':forms.CheckboxSelectMultiple()
         }
 
 class AddCommentsForm(ModelForm):

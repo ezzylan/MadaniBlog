@@ -25,16 +25,19 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField()
-    image = models.ImageField(upload_to=user_directory_path, null=True, default="null")
-    video = models.FileField(upload_to=user_directory_path, null=True, default="null")
+    image = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
     creation_datetime = models.DateTimeField(auto_now=True)
     modification_datetime = models.DateTimeField(default=datetime.now, blank=True)
-    slug = models.SlugField(default="null", null=True, blank=True)
-    tag = models.ManyToManyField(Tag, default="null")
+    slug = models.SlugField(default='null',null=True,blank=True)
+    category = models.ManyToManyField(Tag,default='null')
+
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
         self.modification_datetime = datetime.now()
-        self.slug = "%i-%s" % (self.author.id, slugify(self.title))
+        self.slug = '%i-%i-%s' % (
+            self.author.id,self.id,slugify(self.title[0:45])
+        )
         super().save(*args, **kwargs)
 
     def __str__(self):

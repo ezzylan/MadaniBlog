@@ -1,7 +1,12 @@
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.views import generic
 from django.views.generic import TemplateView
 from django.shortcuts import render, get_object_or_404
 from .models import Post,Tag
 from .forms import BlogSearchForm
+from PersonalBlog.forms import AddCommentsForm
+
 
 def post_list(request):
     latest_posts = Post.objects.order_by('-creation_datetime')[:5]
@@ -16,6 +21,39 @@ def post_list(request):
     }
     return render(request, 'Home/home.html', context)
 
+class PostCommentDetailView(generic.TemplateView):
+    template_name = "Home/post_detail.html"
+
+    def get(self,request,pk):
+        form = AddCommentsForm()
+        post = get_object_or_404(Post, pk=pk)
+        latest_posts = Post.objects.order_by('-creation_datetime')[:3]
+        tag = Tag.objects.all()
+        args = {
+            'form': form,
+            'latest_posts':latest_posts,
+            'post': post,
+            'tag':tag
+        }
+        return render(request, self.template_name, args)
+
+    def post(self, request, pk):
+        if request.user.is_anonymous:
+            return HttpResponseRedirect(reverse('Personal:login'))
+        else:
+            form = AddCommentsForm(request.POST)
+            if form.is_valid():
+                commentForm = form.save(commit=False)
+                commentForm.blogger = request.user
+                commentForm.post = Post.objects.filter(pk=pk).first()
+                commentForm.save()
+                comment = form.cleaned_data['comment']
+                args={
+                    'form': form,
+                    'comment':comment
+                }
+            return HttpResponseRedirect(reverse('Home:post_detail', kwargs={'pk':pk}))
+
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     latest_posts = Post.objects.order_by('-creation_datetime')[:3]
@@ -29,7 +67,7 @@ def post_detail(request, pk):
 
 def tag_posts(request, tag_id):
     tag = Tag.objects.get(id=tag_id)
-    tag_posts = Post.objects.filter(tag=tag)
+    tag_posts = Post.objects.filter(category=tag)
     all_posts = Post.objects.all()
     context = {
         'tag': tag,

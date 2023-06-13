@@ -19,7 +19,7 @@ python3 manage.py runserver
 ```
 
 ## Credits
-- [Harzan](https://github.com/hharzan)
-- [Wei Jian](https://github.com/weijiankong0329)
-- [Ali](https://github.com/ali-ihssan)
+- [Harzan Hazanan](https://github.com/hharzan)
+- [Kong Wei Jian](https://github.com/weijiankong0329)
+- [Ali Al-Yasari](https://github.com/ali-ihssan)
 - [Ma Li](https://github.com/Nobody9810)
