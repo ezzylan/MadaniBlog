@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
@@ -86,11 +86,13 @@ class PostCommentDetailView(mixins.LoginRequiredMixin,generic.TemplateView):
     def get(self,request,slug):
         form = AddCommentsForm()
         posts = Post.objects.filter(author=request.user).annotate(num_fav=Count("blogger"))
-        postBySlug = Post.objects.filter(slug=slug)
+        postBySlug = Post.objects.get(slug=slug)
+        fav = postBySlug.blogger_set.filter(user=request.user)
         args = {
             'form': form,
             'posts': posts,
-            'postBySlug':postBySlug
+            'singlePost':postBySlug,
+            'fav':fav
         }
         return render(request, self.template_name, args)
 
@@ -166,8 +168,16 @@ class AddBlogView(mixins.LoginRequiredMixin,generic.TemplateView):
                 'blog_description': blog_description,
                 'blog_image': blog_image
             }
-            return HttpResponseRedirect(reverse('Personal:view'))
+            return HttpResponseRedirect(reverse('Profile:profile', kwargs={'slug':blog.slug}))
         else:
             messages.error(request, 'Unable to create blog, please find error shown')
             return render(request, 'personal/createEditBlog.html', {'form': form})
 
+def favView(request,pk):
+    post = get_object_or_404(Post, pk=pk)
+
+    if (request.POST.get('fav') == 'yes'):
+        request.user.blogger.fav_post.add(post)
+    else:
+        request.user.blogger.fav_post.remove(post)
+    return HttpResponseRedirect(reverse('Personal:postDetail', kwargs={'slug':post.slug}))

@@ -7,7 +7,6 @@ from .models import Post,Tag
 from .forms import BlogSearchForm
 from PersonalBlog.forms import AddCommentsForm
 
-
 def post_list(request):
     latest_posts = Post.objects.order_by('-creation_datetime')[:5]
     popular_posts = Post.objects.order_by('-modification_datetime')[:5]
@@ -29,12 +28,24 @@ class PostCommentDetailView(generic.TemplateView):
         post = get_object_or_404(Post, pk=pk)
         latest_posts = Post.objects.order_by('-creation_datetime')[:3]
         tag = Tag.objects.all()
-        args = {
-            'form': form,
-            'latest_posts':latest_posts,
-            'post': post,
-            'tag':tag
-        }
+        if(request.user.is_anonymous):
+            print("Hello")
+            args = {
+                'form': form,
+                'latest_posts': latest_posts,
+                'post': post,
+                'tag': tag
+            }
+        else:
+            fav = post.blogger_set.filter(user=request.user)
+            args = {
+                'form': form,
+                'latest_posts': latest_posts,
+                'post': post,
+                'tag': tag,
+                'fav': fav
+            }
+
         return render(request, self.template_name, args)
 
     def post(self, request, pk):
@@ -54,17 +65,6 @@ class PostCommentDetailView(generic.TemplateView):
                 }
             return HttpResponseRedirect(reverse('Home:post_detail', kwargs={'pk':pk}))
 
-def post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    latest_posts = Post.objects.order_by('-creation_datetime')[:3]
-    tag = Tag.objects.all()
-    context = {
-        'post': post,
-        'latest_posts':latest_posts,
-        'tag':tag
-    }
-    return render(request, 'Home/post_detail.html', context)
-
 def tag_posts(request, tag_id):
     tag = Tag.objects.get(id=tag_id)
     tag_posts = Post.objects.filter(category=tag)
@@ -81,13 +81,26 @@ def search(request):
     all_posts = Post.objects.all()
     form = BlogSearchForm()
     results = []
-    search_term = None  # 初始化搜索关键字为None
+    search_term = None
     if request.method == 'POST':
         form = BlogSearchForm(request.POST)
         if form.is_valid():
             search_term = form.cleaned_data['search_term']
             results = list(Post.objects.filter(title__icontains=search_term))
+
     return render(request, 'Home/search_results.html', {'form': form, 'results': results, 'keyword': search_term})
+
+def favView(request,pk):
+    if(request.user.is_anonymous):
+        return HttpResponseRedirect(reverse('Personal:login'))
+    else:
+        post = get_object_or_404(Post, pk=pk)
+        if (request.POST.get('fav')=='yes'):
+            request.user.blogger.fav_post.add(post)
+        else:
+            request.user.blogger.fav_post.remove(post)
+        return HttpResponseRedirect(reverse('Home:post_detail', kwargs={'pk':pk}))
+
 # class Home(TemplateView):
 #     template_name = 'home1.html'
 #     def get_context_data(self, **kwargs):
