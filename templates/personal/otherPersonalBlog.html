@@ -25,9 +25,15 @@
             <div class="mt-3 bg-light">
                 <div class = "row text-center p-sm-5">
                     <div class="flex-shrink-0 text-center p-4">
-                        <img class="avatar rounded-circle" src="{% get_media_prefix %}{{profile.first.profile_image}}" alt="" class="img-fluid">
+                        {% if profile.first.profile_image %}
+                            <img class="avatar rounded-circle" src="{% get_media_prefix %}{{profile.first.profile_image}}" alt="" class="img-fluid">
+                        {% else %}
+                            <img class="avatar rounded-circle" src="{% static 'images/placeholder-profile-icon.jpg' %}" alt="" class="img-fluid">
+                        {% endif %}
+
                         <br/>{{profile.first.user.username}}
                     </div>
+
                     <div class="text-center">
                      {% if profile.first.blog_description %}
                         {{profile.first.blog_description}}
@@ -38,6 +44,11 @@
                     <br/>
                     --{{profile.first.user.date_joined.date}}--
                     </div>
+                    <a href="{% url 'Profile:profile' profile.first.slug %}" class="mt-2">
+                        <button class="btn btn-dark rounded-5  "type="button">
+                            View User Profile
+                        </button>
+                    </a>
                 </div>
             </div>
 
