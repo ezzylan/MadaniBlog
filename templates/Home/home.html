@@ -24,13 +24,14 @@
         {% for post in all_posts|slice:":2" %}
         <div class="col-md-6">
             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                <div class="col p-4 d-flex flex-column position-static">
+                <div class="col ps-4 pt-4 pb-4 ">
                     {% for tag in post.tag.all %}
                         <strong class="d-inline-block mb-2 text-primary-emphasis">{{ tag.label_tag }}</strong>
                     {% endfor %}
                     <h3 class="mb-0">{{ post.title }}</h3>
-                    <div class="mb-1 text-body-secondary">{{ post.creation_datetime|date:'F d, Y' }} by {{ post.author }}</div>
-                        <p class="card-text mb-auto">{{ post.content|truncatechars:100 }}</p>
+
+                    <div class="mb-2 text-body-secondary">{{ post.creation_datetime|date:'F d, Y' }} by {{ post.author }}</div>
+                        <p class="card-text mb-2">{{ post.content|truncatechars:100 }}</p>
                         <a href="{% url 'Home:post_detail' post.id %}" class="post-link icon-link gap-1 ">
                             Continue reading
                             <svg class="bi"><use xlink:href="#chevron-right"/></svg>

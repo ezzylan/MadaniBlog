@@ -26,8 +26,10 @@ class BloggerDetailView(DetailView):
 
         if "follow" in request.POST:
             current_blogger.following_users.add(user)
+            user.blogger.follower.add(request.user)
         elif "unfollow" in request.POST:
             current_blogger.following_users.remove(user)
+            user.blogger.follower.remove(request.user)
 
         return redirect("Profile:profile", slug=blogger.slug)
 

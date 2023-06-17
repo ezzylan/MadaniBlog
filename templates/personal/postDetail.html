@@ -6,7 +6,6 @@
 <div class="row">
     <div class = "col-md-8" >
         <div class="p-4">
-            {% for singlePost in postBySlug %}
             <h3>{{singlePost.title}}</h3>
             Category:
             {% for tag in singlePost.category.all %}
@@ -25,12 +24,39 @@
             <div class="p-5">
                 {{singlePost.content}}
             </div>
-            <div class="container">
-                <h3>{{singlePost.comment_set.count}} Comments {% bs_icon 'chat' %}</h3>
+            <div class=" row text-end mt-3 mb-3">
+                <div class = "col-10 text-end">
+                    {{singlePost.comment_set.count}} {% bs_icon 'chat' %}
+                </div>
+                <div class = "col-2">
+                    <form action="{% url 'Personal:fav' singlePost.id %}" method="POST">
+                        {% csrf_token %}
+                        {{singlePost.blogger_set.count}}
+                        {% if fav %}
+                            <button type = "submit" name="fav" class="icon-button" value="no" style="color:red">
+                                {% bs_icon 'heart-fill'%}
+                            </button>
+                        {% else %}
+                        <button type = "submit" name="fav" class="icon-button"  style="color:red" value="yes" >
+                            {% bs_icon 'heart' %}
+                        </button>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+            <div class="container border p-4">
+                <h3>Comments </h3>
                 {% for comment in singlePost.comment_set.all %}
                 <div class="d-flex mb-4 p-2">
                     <div class="flex-shrink-0">
-                        <img class="avatar rounded-circle" src="{{comment.blogger.profile.profile_image}}" alt="" class="img-fluid">
+                         <a href="{% url 'Profile:profile' comment.blogger.blogger.slug %}">
+                             {% if comment.blogger.blogger.profile_image %}
+                                <img class="avatar rounded-circle" src="{% get_media_prefix %}{{comment.blogger.blogger.profile_image}}" alt="" class="img-fluid">
+
+                             {% else %}
+                                <img class="avatar rounded-circle" src="{% static 'images/placeholder-profile-icon.jpg' %}" >
+                            {% endif %}
+                            </a>
                     </div>
                     <div class="flex-grow-1 ms-2 ms-sm-3">
                         <div class="d-flex align-items-baseline">
@@ -44,7 +70,7 @@
                 </div>
                 {% endfor %}
                 <div class="pt-4">
-                    <h3>Leave Your Comment Here</h3>
+                    <h6>Leave Your Comment Here</h6>
                     <form method="POST" >
                         <div class="form-floating">
                             {% csrf_token %}
@@ -53,7 +79,6 @@
                         </div>
                     </form>
                 </div>
-                {% endfor %}
             </div>
         </div>
     </div>
