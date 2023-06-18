@@ -14,11 +14,11 @@ def user_directory_path(instance, filename):
         return "user_{0}/bloggers/{1}".format(instance.user.id, filename)
 
 
-class Tag(models.Model):
-    label_tag = models.CharField(max_length=20)
+class Category(models.Model):
+    label_category = models.CharField(max_length=20)
 
     def __str__(self):
-        return self.label_tag
+        return self.label_category
 
 
 class Post(models.Model):
@@ -29,7 +29,7 @@ class Post(models.Model):
     creation_datetime = models.DateTimeField(auto_now=True)
     modification_datetime = models.DateTimeField(default=datetime.now, blank=True)
     slug = models.SlugField(default='null',null=True,blank=True)
-    category = models.ManyToManyField(Tag,default='null')
+    category = models.ManyToManyField(Category,default='null')
 
 
     def save(self, *args, **kwargs):

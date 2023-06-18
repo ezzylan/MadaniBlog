@@ -38,3 +38,8 @@ class CreateBlog(ModelForm):
             'blog_description':forms.Textarea(attrs={'class':'form-control'}),
             'blog_image':forms.FileInput(attrs={'class':'form-control w-50'})
         }
+    def __init__(self, *args, **kwargs):
+        # first call parent's constructor
+        super(CreateBlog, self).__init__(*args, **kwargs)
+        # there's a `fields` property now
+        self.fields['blog_title'].required = True

@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.views import generic
 from django.views.generic import TemplateView
 from django.shortcuts import render, get_object_or_404
-from .models import Post,Tag
+from .models import Post,Category
 from .forms import BlogSearchForm
 from PersonalBlog.forms import AddCommentsForm
 
@@ -11,7 +11,7 @@ def post_list(request):
     latest_posts = Post.objects.order_by('-creation_datetime')[:5]
     popular_posts = Post.objects.order_by('-modification_datetime')[:5]
     all_posts = Post.objects.all()
-    tag = Tag.objects.all()
+    tag = Category.objects.all()
     context = {
         'latest_posts': latest_posts,
         'popular_posts': popular_posts,
@@ -27,7 +27,7 @@ class PostCommentDetailView(generic.TemplateView):
         form = AddCommentsForm()
         post = get_object_or_404(Post, pk=pk)
         latest_posts = Post.objects.order_by('-creation_datetime')[:3]
-        tag = Tag.objects.all()
+        tag = Category.objects.all()
         if(request.user.is_anonymous):
             print("Hello")
             args = {
@@ -66,7 +66,7 @@ class PostCommentDetailView(generic.TemplateView):
             return HttpResponseRedirect(reverse('Home:post_detail', kwargs={'pk':pk}))
 
 def tag_posts(request, tag_id):
-    tag = Tag.objects.get(id=tag_id)
+    tag = Category.objects.get(id=tag_id)
     tag_posts = Post.objects.filter(category=tag)
     all_posts = Post.objects.all()
     context = {
