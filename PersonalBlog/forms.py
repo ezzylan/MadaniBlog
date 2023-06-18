@@ -39,3 +39,16 @@ class CreateBlog(ModelForm):
             'blog_description':forms.Textarea(attrs={'class':'form-control'}),
             'blog_image':forms.FileInput(attrs={'class':'form-control w-50'})
         }
+
+class RegisterUser(ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'password']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'off'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'off'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'off'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'autocomplete': 'off'}),
+            'password': forms.PasswordInput(attrs={'class': 'form-control'})
+
+        }

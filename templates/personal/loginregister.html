@@ -19,7 +19,7 @@
             <form class="form-control" method="post">
             {% csrf_token %}
             <table>
-                {{ form.as_table }}
+                {{ login_form.as_table }}
             </table>
             <br />
             <button name="submit" value="sign_in" type="submit" class="btn btn-primary btn-block mb-4">Sign In</button>
@@ -30,37 +30,11 @@
         </form>
         </div>
         <div class="tab-pane fade show" id="register" role="tabpanel" aria-labelledby="tab-register">
-            <form class="form-control" action="{% url 'Personal:register_login' %}" method="post">
+            <form class="form-control" autocomplete="off" method="post">
             {% csrf_token %}
-                <!-- Name input -->
-              <div class="form-outline mb-4">
-                <input type="text" id="name" name="name" class="form-control" />
-                <label class="form-label" for="name">Name</label>
-              </div>
-
-              <!-- Username input -->
-              <div class="form-outline mb-4">
-                <input type="text" id="username" name="username" class="form-control" />
-                <label class="form-label" for="username">Username</label>
-              </div>
-
-              <!-- Email input -->
-              <div class="form-outline mb-4">
-                <input type="email" id="email" name="email" class="form-control" />
-                <label class="form-label" for="email">Email</label>
-              </div>
-
-              <!-- Password input -->
-              <div class="form-outline mb-4">
-                <input type="password" id="password1" name="password1" class="form-control" />
-                <label class="form-label" for="password1">Password</label>
-              </div>
-
-              <!-- Repeat Password input -->
-              <div class="form-outline mb-4">
-                <input type="password" id="password2" name="password2" class="form-control" />
-                <label class="form-label" for="password2">Repeat password</label>
-              </div>
+             <table>
+                 {{ signup_form.as_table }}
+             </table>
 
               <!-- Submit button -->
               <button name="submit" value="sign_up" type="submit" class="btn btn-primary btn-block mb-3">Sign Up</button>

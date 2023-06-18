@@ -10,8 +10,7 @@ urlpatterns = [
     path('post/<slug:slug>/', views.PostCommentDetailView.as_view(),name='postDetail'),
     path('post/edit/<slug:slug>/', views.editPostView.as_view(), name='postEdit'),
     path('post/delete/<slug:slug>/', views.deletePostView, name='postDelete'),
-    path('loginregister/', auth_views.LoginView.as_view(template_name = 'personal/loginregister.html'),name='loginregister'),
-    path('register_login/', views.register_login, name='register_login'),
+    path('loginregister/', views.LoginRegisterView.as_view(),name='loginregister'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('password_reset/', auth_views.PasswordResetView.as_view(
         template_name='registration/password_reset.html',
