@@ -25,7 +25,7 @@ def blogView(request):
 
 
 class BlogPostList(mixins.LoginRequiredMixin, generic.ListView):
-    login_url = '/personal/login/'
+    login_url = '/personal/loginregister/'
     template_name = 'personal/listBlog.html'
     context_object_name = 'personal_post'
 
@@ -45,7 +45,7 @@ def BlogPostOther(request, pk):
 
 
 class ManagePostList(mixins.LoginRequiredMixin, generic.ListView):
-    login_url = '/personal/login/'
+    login_url = '/personal/loginregister/'
     template_name = 'personal/manageBlogList.html'
     context_object_name = 'personal_post'
 
@@ -122,7 +122,7 @@ class PostCommentDetailView(mixins.LoginRequiredMixin, generic.TemplateView):
 
 
 class editPostView(mixins.LoginRequiredMixin, generic.TemplateView):
-    login_url = '/personal/login/'
+    login_url = '/personal/loginregister/'
     template_name = "personal/editPost.html"
 
     def get(self, request, slug):
@@ -156,28 +156,38 @@ def deletePostView(request, slug):
 
 class LoginRegisterView(generic.TemplateView):
     template_name = "personal/loginregister.html"
-    success_url = "/"
+    success_url = ""
     form = AuthenticationForm
     model = User
 
-    def get_context_data(self):
-        context = super(LoginRegisterView, self).get_context_data()
-        context['login_form'] = AuthenticationForm
-        context['signup_form'] = RegisterUser
-        return context
+    def get(self,request):
+        login_form = AuthenticationForm()
+        signup_form = RegisterUser()
+        args= {
+           'login_form':login_form,
+            'signup_form':signup_form
+        }
+        return render(request, self.template_name, args)
 
     def post(self, request):
         if request.POST.get('submit') == 'sign_up':
             form = RegisterUser(request.POST)
-            if form.is_valid():
-                username = form.cleaned_data.get('username')
-                user = form.save()
-                user.set_password(user.password)
-                user.save()
-                messages.success(request, "Account was created for " + username)
-                return HttpResponseRedirect(reverse('Home:home'))
+            login_form = AuthenticationForm()
+            if request.POST.get('password')== request.POST.get('confirm_password'):
+                if form.is_valid():
+                    username = form.cleaned_data.get('username')
+                    user = form.save()
+                    user.set_password(user.password)
+                    user.save()
+                    messages.success(request, "Account was created for " + username)
+                    return HttpResponseRedirect(reverse('Home:home'))
+                else:
+                    messages.error(request, "Register Failed")
+                    return HttpResponseRedirect(reverse('Personal:loginregister'))
             else:
-                return HttpResponseRedirect(reverse('Personal:loginregister'))
+                messages.error(request, "Register Failed, Password Confirmation is not match")
+                return render(request,self.template_name,{'signup_form': form,'register_failed':True,'login_form':login_form})
+
         elif request.POST.get('submit') == 'sign_in':
             username = request.POST.get('username')
             password = request.POST.get('password')
@@ -186,16 +196,15 @@ class LoginRegisterView(generic.TemplateView):
 
             if user is not None:
                 login(request, user)
-                return render(request, 'home/home.html')
+                return HttpResponseRedirect(reverse('Home:home'))
             else:
                 messages.info(request, 'Wrong username or password')
                 return HttpResponseRedirect(reverse('Personal:loginregister'))
-        return HttpResponseRedirect(reverse('Personal:loginregister'))
 
 
 
 class AddBlogView(mixins.LoginRequiredMixin, generic.TemplateView):
-    login_url = '/personal/login/'
+    login_url = '/personal/loginregister/'
     template_name = "personal/createEditBlog.html"
 
     def get(self, request):

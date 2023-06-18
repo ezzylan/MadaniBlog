@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-Post Detail
+{{post.title}}
 {% endblock %}
 {% block content %}
 {% load bootstrap_icons %}
@@ -25,9 +25,9 @@ Post Detail
                     <h2 class="display-5 link-body-emphasis mb-1">{{post.title}}</h2>
                     <p class="blog-post-meta">{{post.creation_datetime|date:'F d, Y'}} by
                         {% if request.user.id == post.author.id %}
-                        <a href="{% url 'Profile:profile' request.user.blogger.slug %}">{{ post.author }}</a>
+                        <a href="{% url 'Profile:profile' request.user.blogger.slug %}">{{ post.author.get_full_name }}</a>
                         {% else %}
-                        <a href="{% url 'Profile:profile' post.author.blogger.slug %}">{{ post.author }}</a></p>
+                        <a href="{% url 'Profile:profile' post.author.blogger.slug %}">{{ post.author.get_full_name }}</a></p>
                         {% endif %}
 
                     <p class="text-justify">{{post.content}}</p>
@@ -68,7 +68,7 @@ Post Detail
                         </div>
                         <div class="flex-grow-1 ms-2 ms-sm-3">
                             <div class="d-flex align-items-baseline">
-                                <h6 class="me-2">{{comment.blogger}}</h6>
+                                <h6 class="me-2">{{comment.blogger.get_full_name}}</h6>
                                 <span class="text-muted">{{comment.published_date|date:'Y-m-d H:i'}}</span>
                             </div>
                             <div class="comment-body">

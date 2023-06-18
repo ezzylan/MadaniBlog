@@ -4,7 +4,7 @@
 {% block title %}{{ blogger_user.get_full_name }}{% endblock %}
 {% block content %}
 <div class="d-flex flex-column gap-4">
-  <div class="row g-3">
+  <div class="row g-3 container">
     <div class="col-12 col-md-2">
       {% if blogger.profile_image %}
       <img id="profile-picture" src="{{ MEDIA_URL }}{{ blogger.profile_image }}"
@@ -30,7 +30,7 @@
         </div>
       </div>
     </div>
-    <div class="col-12 col-md-2">
+    <div class="col-12 col-md-2 text-end">
       <div>
         {% if user == blogger_user %}
         <a class="btn btn-primary" href="{% url 'Profile:edit-profile' blogger.slug %}" role="button">
@@ -159,22 +159,22 @@
   <div class="container mt-4 mb-4">
     <div class="row border rounded text-justify p-4">
       <div class="col-4 p-3">
-          <h5>Followers</h5>
+          <h5>Followers {{ blogger_followers.count}}</h5>
           <hr/>
           <!-- List of followers  -->
           {% if blogger_followers %}
           {% for follower in blogger_followers %}
           <div class="row border m-2 rounded p-2">
             <div class="col-3 p-2">
-                {% if follower.profile_image %}
-                    <img class="avatar  border rounded-circle" src="{{ MEDIA_URL }}{{ follower.profile_image }}" >
+                {% if follower.blogger.profile_image%}
+                    <img class="avatar  border rounded-circle" src="{{ MEDIA_URL }}{{ follower.blogger.profile_image }}" >
                 {% else %}
                     <img class="avatar  border rounded-circle" src="{% static 'images/placeholder-profile-icon.jpg' %}" >
                 {% endif %}
             </div>
             <div class="col-6 p-2">
                 {% if follower.first_name or follower.last_name %}
-                    {{follower.first_name}} {{follower.last_name}}
+                    {{follower.get_full_name}}
                 {% else %}
                     No Name
                 {% endif %}
@@ -193,22 +193,22 @@
           {% endif %}
       </div>
       <div class="col-4 p-3">
-          <h5>Followerings</h5>
+          <h5>Followerings {{ blogger_followings.count}}</h5>
           <hr/>
           <!-- List of followers  -->
           {% if blogger_followings %}
           {% for following in blogger_followings %}
           <div class="row border m-2 rounded p-2">
             <div class="col-3 p-2">
-               {% if follower.profile_image %}
-                    <img class="avatar  border rounded-circle" src="{{ MEDIA_URL }}{{ following.profile_image }}" >
+               {% if following.blogger.profile_image %}
+                    <img class="avatar  border rounded-circle" src="{{ MEDIA_URL }}{{ following.blogger.profile_image }}" >
                 {% else %}
                     <img class="avatar  border rounded-circle" src="{% static 'images/placeholder-profile-icon.jpg' %}" >
                 {% endif %}
             </div>
             <div class="col-6 p-2">
               {% if following.first_name or following.last_name %}
-                    {{following.first_name}} {{following.last_name}}
+                    {{following.get_full_name}}
                 {% else %}
                     No Name
                 {% endif %}
@@ -227,7 +227,7 @@
           {% endif %}
       </div>
       <div class="col-4 p-3">
-          <h5>Favourite Posts</h5>
+          <h5>Favourite Posts {{ fav_posts.count}}</h5>
           <hr/>
           <!-- List of followers  -->
           {% if fav_posts %}
@@ -236,7 +236,7 @@
             <div class="col-9 p-2">
                 <b>{{ post.title }}</b>
                 </br>
-              by {{ post.author }}
+              by {{ post.author.get_full_name }}
             </div>
             <div class="col-3 p-2 ">
               <a href="{% url 'Home:post_detail' post.id %}" class="post-link icon-link gap-1 ">

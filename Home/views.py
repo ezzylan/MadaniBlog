@@ -31,7 +31,6 @@ class PostCommentDetailView(generic.TemplateView):
         latest_posts = Post.objects.order_by('-creation_datetime')[:3]
         tag = Category.objects.all()
         if(request.user.is_anonymous):
-            print("Hello")
             args = {
                 'form': form,
                 'latest_posts': latest_posts,
@@ -52,7 +51,7 @@ class PostCommentDetailView(generic.TemplateView):
 
     def post(self, request, pk):
         if request.user.is_anonymous:
-            return HttpResponseRedirect(reverse('Personal:login'))
+            return HttpResponseRedirect(reverse('Personal:loginregister'))
         else:
             form = AddCommentsForm(request.POST)
             if form.is_valid():
@@ -97,7 +96,7 @@ def search(request):
 
 def favView(request,pk):
     if(request.user.is_anonymous):
-        return HttpResponseRedirect(reverse('Personal:login'))
+        return HttpResponseRedirect(reverse('Personal:loginregister'))
     else:
         post = get_object_or_404(Post, pk=pk)
         if (request.POST.get('fav')=='yes'):

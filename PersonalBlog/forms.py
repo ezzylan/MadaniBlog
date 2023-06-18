@@ -55,5 +55,12 @@ class RegisterUser(ModelForm):
             'last_name': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'off'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'autocomplete': 'off'}),
             'password': forms.PasswordInput(attrs={'class': 'form-control'})
-
         }
+
+    def __init__(self, *args, **kwargs):
+        # first call parent's constructor
+        super(RegisterUser, self).__init__(*args, **kwargs)
+        # there's a `fields` property now
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+        self.fields['email'].required = True
