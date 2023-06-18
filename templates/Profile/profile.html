@@ -152,6 +152,76 @@
   </div>
 
   <!-- one row of three sections e.g. followers, following and favourite blog posts -->
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="container p-3 me-1 border rounded">
+        <!-- List of followers  -->
+        {% if blogger_followers %}
 
+        <div class="container">
+          <div class="row g-0">
+            <h5>Followers</h5>
+            <div class="d-flex flex-column gap-2">
+              {% for follower in blogger_followers %}
+                {{ follower.first_name }}
+                {% if follower.blogger %}
+                  {% if follower != blogger_user %}
+                        <a href="{% url 'Personal:viewOther' follower.id %}">View Blog</a>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+        </div>
+
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="container p-3 me-1 border rounded">
+        <!-- List of following -->
+        {% if blogger_followings %}
+
+        <div class="container">
+          <div class="row g-0">
+            <h5>Following</h5>
+            <div class="d-flex flex-column gap-2">
+              {% for following in blogger_followings %}
+                {{ following.first_name }}
+                {% if following.blogger %}
+                  <a href="{% url 'Personal:viewOther' following.id %}">View Blog</a>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+        </div>
+
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="container p-3 me-1 border rounded">
+        <!-- List of favourite blog posts -->
+        {% if fav_posts %}
+
+        <div class="container">
+          <div class="row g-0">
+            <h5>Favourite Posts</h5>
+            <div class="d-flex flex-column gap-2">
+              {% for post in fav_posts %}
+              <div class="mb-2">{{ post.title }} by {{ post.author }}</div>
+              <p class="mb-2">{{ post.content|truncatechars:100 }}</p>
+              <a href="{% url 'Home:post_detail' post.id %}" class="post-link icon-link gap-1 ">Continue reading</a>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        {% endif %}
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

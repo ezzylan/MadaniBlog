@@ -16,7 +16,13 @@ class BloggerDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         blogger = self.get_object()
+        followers = blogger.follower.all()
+        following = blogger.following_users.all()
+        fav_posts = blogger.fav_post.all()
         context["blogger_user"] = blogger.user
+        context["blogger_followers"] = followers
+        context["blogger_followings"] = following
+        context["fav_posts"] = fav_posts
         return context
 
     def post(self, request, *args, **kwargs):
