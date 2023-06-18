@@ -38,8 +38,22 @@ class CreateBlog(ModelForm):
              'blog_title': forms.TextInput(attrs={'class': 'form-control '}),
             'blog_description':forms.Textarea(attrs={'class':'form-control'})
         }
+
     def __init__(self, *args, **kwargs):
         # first call parent's constructor
         super(CreateBlog, self).__init__(*args, **kwargs)
         # there's a `fields` property now
         self.fields['blog_title'].required = True
+
+class RegisterUser(ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'password']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'off'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'off'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'off'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'autocomplete': 'off'}),
+            'password': forms.PasswordInput(attrs={'class': 'form-control'})
+
+        }
