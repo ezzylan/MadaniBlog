@@ -28,8 +28,8 @@ class Post(models.Model):
     image = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
     creation_datetime = models.DateTimeField(auto_now=True)
     modification_datetime = models.DateTimeField(default=datetime.now, blank=True)
-    slug = models.SlugField(default='null',null=True,blank=True)
-    category = models.ManyToManyField(Tag,default='null')
+    slug = models.SlugField(default='null', null=True,blank=True)
+    category = models.ManyToManyField(Tag, default='null')
 
 
     def save(self, *args, **kwargs):
@@ -86,6 +86,9 @@ class Blogger(models.Model):
     )
     fav_post = models.ManyToManyField(Post, default="null", null=True, blank=True)
     slug = models.SlugField(default="null", null=False, unique=True)
+
+    def user__username(self):
+        return self.user.name
 
     def get_absolute_url(self):
         return reverse("Profile:profile", kwargs={"slug": self.slug})

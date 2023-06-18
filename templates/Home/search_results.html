@@ -6,11 +6,12 @@ Search Result
 {% block content %}
   <h1>Search Results: <span style="color: aquamarine;">"{{ keyword }}"</span></h1>
   <hr>
-  {% if results %}
+  {% if post_results %}
     <div class="container">
       <div class="row g-0">
+        <h2>Blog Post Results</h2>
         <div class="card-body"></div>
-        {% for post in results %}
+        {% for post in post_results %}
           <div class="col-sm-8 bg-light mb-3" style="height: 200px;">
             <div class="card-body">
               <h3 class="card-title">{{ post.title }}</h3>
@@ -32,6 +33,33 @@ Search Result
       </div>
     </div>
   {% else %}
-    <p>No results found.</p>
+    <p>No blog post results found.</p>
+  {% endif %}
+  {% if blogger_results %}
+    <div class="container">
+      <div class="row g-0">
+        <h2>Bloggers Results</h2>
+        <div class="card-body"></div>
+        {% for user in blogger_results %}
+          <div class="col-sm-8 bg-light mb-3" style="height: 300px;">
+            <div class="card-body">
+              <h3 class="card-title">{{ user.blogger.blog_title }}</h3>
+              <div class="mb-2">About Blogger:</div>
+              <div class="mb-0">{{ user.blogger.blog_description|truncatechars:100 }}</div>
+              <div class="mb-2">Followers: {{ user.blogger.follower.count }}</div>
+              <div class="mb-2">Following: {{ user.blogger.following_users.count }}</div>
+              <div class="mb-2">Posts: {{ user.blogger.user.post_set.count }}</div>
+              {% if request.user.id == user.id %}
+                        <a href="{% url 'Personal:view' %}">Read More</a>
+                        {% else %}
+                        <a href="{% url 'Personal:viewOther' user.id %}">Read More</a>
+                        {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    <p>No blogger results found.</p>
   {% endif %}
 {% endblock %}

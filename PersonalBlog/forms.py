@@ -2,6 +2,7 @@ from django.forms import ModelForm
 from Home.models import Post
 from Home.models import Comment
 from Home.models import Blogger
+from django.contrib.auth.models import User
 from django import forms
 
 class AddBlogPostForm(ModelForm):
@@ -16,8 +17,8 @@ class AddBlogPostForm(ModelForm):
         }
         widgets ={
             'title': forms.TextInput(attrs={'class': 'form-control '}),
-            'content':forms.Textarea(attrs={'class':'form-control'}),
-            'category':forms.CheckboxSelectMultiple()
+            'content': forms.Textarea(attrs={'class': 'form-control'}),
+            'category': forms.CheckboxSelectMultiple()
         }
 
 class AddCommentsForm(ModelForm):

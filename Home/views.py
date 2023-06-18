@@ -4,6 +4,7 @@ from django.views import generic
 from django.views.generic import TemplateView
 from django.shortcuts import render, get_object_or_404
 from .models import Post,Tag
+from django.contrib.auth.models import User
 from .forms import BlogSearchForm
 from PersonalBlog.forms import AddCommentsForm
 
@@ -79,16 +80,19 @@ def tag_posts(request, tag_id):
 
 def search(request):
     all_posts = Post.objects.all()
+    all_bloggers = User.objects.all()
     form = BlogSearchForm()
-    results = []
+    post_results = []
+    blogger_results = []
     search_term = None
     if request.method == 'POST':
         form = BlogSearchForm(request.POST)
         if form.is_valid():
             search_term = form.cleaned_data['search_term']
-            results = list(Post.objects.filter(title__icontains=search_term))
+            post_results = list(all_posts.filter(title__icontains=search_term))
+            blogger_results = list(all_bloggers.filter(blogger__blog_title__icontains=search_term))
 
-    return render(request, 'Home/search_results.html', {'form': form, 'results': results, 'keyword': search_term})
+    return render(request, 'Home/search_results.html', {'form': form, 'post_results': post_results, 'blogger_results': blogger_results, 'keyword': search_term})
 
 def favView(request,pk):
     if(request.user.is_anonymous):
