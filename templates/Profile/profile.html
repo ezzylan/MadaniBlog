@@ -129,12 +129,18 @@
         </div>
       </div>
       <div class="text-center m-2">
-        <a class="btn btn-outline-secondary" href="{% url 'Personal:view' %}" role="button">
-          {% bs_icon 'arrow-up-right' %}&nbsp;Read the blog
-        </a>
-        <a class="btn btn-outline-secondary" href="{% url 'Personal:createEditBlog' %}" role="button">
-          {% bs_icon 'arrow-up-right' %}&nbsp;Edit the blog information
-        </a>
+        {% if user == blogger_user %}
+          <a class="btn btn-outline-secondary" href="{% url 'Personal:view' %}" role="button">
+            {% bs_icon 'arrow-up-right' %}&nbsp;Read the blog
+          </a>
+          <a class="btn btn-outline-secondary" href="{% url 'Personal:createEditBlog' %}" role="button">
+            {% bs_icon 'arrow-up-right' %}&nbsp;Edit the blog information
+          </a>
+        {% else %}
+           <a class="btn btn-outline-secondary" href="{% url 'Personal:viewOther' blogger.user.id %}" role="button">
+              {% bs_icon 'arrow-up-right' %}&nbsp;Read the blog
+            </a>
+        {% endif %}
       </div>
       {% else %}
       <p class="text-body-secondary">You haven't started a blog yet. Start your blogging journey here...</p>
