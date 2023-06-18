@@ -87,6 +87,9 @@ class Blogger(models.Model):
     fav_post = models.ManyToManyField(Post, default="null", null=True, blank=True)
     slug = models.SlugField(default="null", null=False, unique=True)
 
+    def user__username(self):
+        return self.user.name
+
     def get_absolute_url(self):
         return reverse("Profile:profile", kwargs={"slug": self.slug})
 
