@@ -4,7 +4,7 @@
 {% block title %}{{ blogger_user.get_full_name }}{% endblock %}
 {% block content %}
 <div class="d-flex flex-column gap-4">
-  <div class="row g-3">
+  <div class="row g-3 container">
     <div class="col-12 col-md-2">
       {% if blogger.profile_image %}
       <img id="profile-picture" src="{{ MEDIA_URL }}{{ blogger.profile_image }}"
@@ -30,7 +30,7 @@
         </div>
       </div>
     </div>
-    <div class="col-12 col-md-2">
+    <div class="col-12 col-md-2 text-end">
       <div>
         {% if user == blogger_user %}
         <a class="btn btn-primary" href="{% url 'Profile:edit-profile' blogger.slug %}" role="button">
@@ -55,10 +55,9 @@
       </div>
     </div>
   </div>
-
-  <div class="row g-4">
-    <div class="col-md-3">
-      <div class="container p-3 me-1 border rounded">
+  <div class="container mt-4 mb-4">
+    <div class="row">
+      <div class="col-2 border rounded p-3">
         <h5>Contact Info</h5>
         <div class="d-flex flex-column gap-2">
           {% if blogger.twitter_link or blogger.instagram_link or blogger.facebook_link or blogger.website_link%}
@@ -93,55 +92,164 @@
 
       </div>
 
-    </div>
 
-    <div class="col-md-9 p-3 border rounded">
 
-          <h5>About Me</h5>
-          {% if blogger.bio %}
-          <p>{{ blogger.bio }}</p>
-          {% else %}
-          User did not write any about itself
-          {% endif %}
+      <div class="col ms-3 border rounded pt-3 pb-3 ps-3 pe-0">
+            <h5>About Me</h5>
+            {% if blogger.bio %}
+            <p>{{ blogger.bio }}</p>
+            {% else %}
+            User did not write any about itself
+            {% endif %}
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="container p-3 border rounded text-justify">
-    <h5>Writes at</h5>
-    <hr>
-
-    {% if blogger.blog_title %}
-    <div class="row">
-      <div class="col-4">
-        {% if blogger.blog_image %}
-          <img src="{% get_media_prefix %}{{ blogger.blog_image}}" class="img-fluid m-2">
+  <div class="container">
+    <div class="row border rounded text-justify p-4">
+      <h5>Writes at</h5>
+      <hr>
+      {% if blogger.blog_title %}
+      <div class="row">
+        <div class="col-4">
+          {% if blogger.blog_image %}
+            <img src="{% get_media_prefix %}{{ blogger.blog_image}}" class="img-fluid m-2">
+          {% else %}
+            <img src="{% static 'images/blogpost_placeholder.png' %}" class="img-fluid m-2">
+          {% endif %}
+        </div>
+        <div class="col-8">
+          <h6>Blog Title: </h6>
+            {{ blogger.blog_title }}
+          <p>
+            <h6>Blog Description: </h6>
+            {{ blogger.blog_description }}
+          </p>
+        </div>
+      </div>
+      <div class="text-center m-2">
+        {% if user == blogger_user %}
+          <a class="btn btn-outline-secondary" href="{% url 'Personal:view' %}" role="button">
+            {% bs_icon 'arrow-up-right' %}&nbsp;Read the blog
+          </a>
+          <a class="btn btn-outline-secondary" href="{% url 'Personal:createEditBlog' %}" role="button">
+            {% bs_icon 'arrow-up-right' %}&nbsp;Edit the blog information
+          </a>
         {% else %}
-          <img src="{% static 'images/blogpost_placeholder.png' %}" class="img-fluid m-2">
+           <a class="btn btn-outline-secondary" href="{% url 'Personal:viewOther' blogger.user.id %}" role="button">
+              {% bs_icon 'arrow-up-right' %}&nbsp;Read the blog
+            </a>
         {% endif %}
       </div>
-      <div class="col-8">
-        <h6>Blog Title: </h6>
-          {{ blogger.blog_title }}
-        <p>
-          <h6>Blog Description: </h6>
-          {{ blogger.blog_description }}
-        </p>
+      {% else %}
+      <p class="text-body-secondary">You haven't started a blog yet. Start your blogging journey here...</p>
+       {% if user == blogger_user %}
+        <a class="btn btn-outline-secondary" href="{% url 'Personal:createEditBlog' %}" role="button">
+
+          {% bs_icon 'arrow-up-right' %}&nbsp;Create a new blog
+
+      </a>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- one row of three sections e.g. followers, following and favourite blog posts -->
+  <div class="container mt-4 mb-4">
+    <div class="row border rounded text-justify p-4">
+      <div class="col-4 p-3">
+          <h5>Followers {{ blogger_followers.count}}</h5>
+          <hr/>
+          <!-- List of followers  -->
+          {% if blogger_followers %}
+          {% for follower in blogger_followers %}
+          <div class="row border m-2 rounded p-2">
+            <div class="col-3 p-2">
+                {% if follower.blogger.profile_image%}
+                    <img class="avatar  border rounded-circle" src="{{ MEDIA_URL }}{{ follower.blogger.profile_image }}" >
+                {% else %}
+                    <img class="avatar  border rounded-circle" src="{% static 'images/placeholder-profile-icon.jpg' %}" >
+                {% endif %}
+            </div>
+            <div class="col-6 p-2">
+                {% if follower.first_name or follower.last_name %}
+                    {{follower.get_full_name}}
+                {% else %}
+                    No Name
+                {% endif %}
+            </div>
+            <div class="col-3 p-2">
+              <a href="{% url 'Profile:profile' follower.blogger.slug %}">
+                  <button class="btn btn-secondary rounded-1  " type="button">
+                      View Profile
+                  </button>
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+          {% else %}
+          No Followers Yet
+          {% endif %}
+      </div>
+      <div class="col-4 p-3">
+          <h5>Followerings {{ blogger_followings.count}}</h5>
+          <hr/>
+          <!-- List of followers  -->
+          {% if blogger_followings %}
+          {% for following in blogger_followings %}
+          <div class="row border m-2 rounded p-2">
+            <div class="col-3 p-2">
+               {% if following.blogger.profile_image %}
+                    <img class="avatar  border rounded-circle" src="{{ MEDIA_URL }}{{ following.blogger.profile_image }}" >
+                {% else %}
+                    <img class="avatar  border rounded-circle" src="{% static 'images/placeholder-profile-icon.jpg' %}" >
+                {% endif %}
+            </div>
+            <div class="col-6 p-2">
+              {% if following.first_name or following.last_name %}
+                    {{following.get_full_name}}
+                {% else %}
+                    No Name
+                {% endif %}
+            </div>
+            <div class="col-3 p-2">
+              <a href="{% url 'Profile:profile' following.blogger.slug %}">
+                  <button class="btn btn-secondary rounded-1  " type="button">
+                      View Profile
+                  </button>
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+          {% else %}
+          No Followering Yet
+          {% endif %}
+      </div>
+      <div class="col-4 p-3">
+          <h5>Favourite Posts {{ fav_posts.count}}</h5>
+          <hr/>
+          <!-- List of followers  -->
+          {% if fav_posts %}
+          {% for post in fav_posts %}
+          <div class="row border m-2 rounded p-2">
+            <div class="col-9 p-2">
+                <b>{{ post.title }}</b>
+                </br>
+              by {{ post.author.get_full_name }}
+            </div>
+            <div class="col-3 p-2 ">
+              <a href="{% url 'Home:post_detail' post.id %}" class="post-link icon-link gap-1 ">
+                  <button class="btn btn-secondary rounded-1  " type="button">Detail</button>
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+          {% else %}
+          No Favourite Posts Yet
+          {% endif %}
       </div>
     </div>
-    <div class="text-center m-2">
-      <a class="btn btn-outline-secondary" href="{% url 'Personal:view' %}" role="button">
-        {% bs_icon 'arrow-up-right' %}&nbsp;Read the blog
-      </a>
-      <a class="btn btn-outline-secondary" href="{% url 'Personal:createEditBlog' %}" role="button">
-        {% bs_icon 'arrow-up-right' %}&nbsp;Edit the blog information
-      </a>
-    </div>
-    {% else %}
-      <p class="text-body-secondary">You haven't started a blog yet. Start your blogging journey here...</p>
-      <a class="btn btn-outline-secondary" href="{% url 'Personal:createEditBlog' %}" role="button">
-        {% bs_icon 'arrow-up-right' %}&nbsp;Create a new blog
-      </a>
-    {% endif %}
-  </div>
+   </div>
 </div>
 {% endblock %}

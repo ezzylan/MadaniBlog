@@ -3,15 +3,17 @@ from django.urls import reverse
 from django.views import generic
 from django.views.generic import TemplateView
 from django.shortcuts import render, get_object_or_404
-from .models import Post,Tag
+from .models import Post,Category
+from django.contrib.auth.models import User
 from .forms import BlogSearchForm
 from PersonalBlog.forms import AddCommentsForm
+from django.db.models import Q
 
 def post_list(request):
     latest_posts = Post.objects.order_by('-creation_datetime')[:5]
     popular_posts = Post.objects.order_by('-modification_datetime')[:5]
     all_posts = Post.objects.all()
-    tag = Tag.objects.all()
+    tag = Category.objects.all()
     context = {
         'latest_posts': latest_posts,
         'popular_posts': popular_posts,
@@ -27,9 +29,8 @@ class PostCommentDetailView(generic.TemplateView):
         form = AddCommentsForm()
         post = get_object_or_404(Post, pk=pk)
         latest_posts = Post.objects.order_by('-creation_datetime')[:3]
-        tag = Tag.objects.all()
+        tag = Category.objects.all()
         if(request.user.is_anonymous):
-            print("Hello")
             args = {
                 'form': form,
                 'latest_posts': latest_posts,
@@ -50,7 +51,7 @@ class PostCommentDetailView(generic.TemplateView):
 
     def post(self, request, pk):
         if request.user.is_anonymous:
-            return HttpResponseRedirect(reverse('Personal:login'))
+            return HttpResponseRedirect(reverse('Personal:loginregister'))
         else:
             form = AddCommentsForm(request.POST)
             if form.is_valid():
@@ -66,7 +67,7 @@ class PostCommentDetailView(generic.TemplateView):
             return HttpResponseRedirect(reverse('Home:post_detail', kwargs={'pk':pk}))
 
 def tag_posts(request, tag_id):
-    tag = Tag.objects.get(id=tag_id)
+    tag = Category.objects.get(id=tag_id)
     tag_posts = Post.objects.filter(category=tag)
     all_posts = Post.objects.all()
     context = {
@@ -79,20 +80,23 @@ def tag_posts(request, tag_id):
 
 def search(request):
     all_posts = Post.objects.all()
+    all_bloggers = User.objects.all()
     form = BlogSearchForm()
-    results = []
+    post_results = []
+    blogger_results = []
     search_term = None
     if request.method == 'POST':
         form = BlogSearchForm(request.POST)
         if form.is_valid():
             search_term = form.cleaned_data['search_term']
-            results = list(Post.objects.filter(title__icontains=search_term))
+            post_results = list(all_posts.filter(title__icontains=search_term))
+            blogger_results = list(all_bloggers.filter(Q(first_name__icontains=search_term)|Q(last_name__icontains=search_term)))
 
-    return render(request, 'Home/search_results.html', {'form': form, 'results': results, 'keyword': search_term})
+    return render(request, 'Home/search_results.html', {'form': form, 'post_results': post_results, 'blogger_results': blogger_results, 'keyword': search_term})
 
 def favView(request,pk):
     if(request.user.is_anonymous):
-        return HttpResponseRedirect(reverse('Personal:login'))
+        return HttpResponseRedirect(reverse('Personal:loginregister'))
     else:
         post = get_object_or_404(Post, pk=pk)
         if (request.POST.get('fav')=='yes'):

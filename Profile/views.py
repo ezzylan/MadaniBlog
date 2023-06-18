@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.views.generic import DetailView, UpdateView
 from Home.models import Blogger
 from .forms import UserForm, BloggerForm
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 
@@ -16,22 +17,31 @@ class BloggerDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         blogger = self.get_object()
+        followers = blogger.follower.all()
+        following = blogger.following_users.all()
+        fav_posts = blogger.fav_post.all()
         context["blogger_user"] = blogger.user
+        context["blogger_followers"] = followers
+        context["blogger_followings"] = following
+        context["fav_posts"] = fav_posts
         return context
 
     def post(self, request, *args, **kwargs):
-        blogger = self.get_object()
-        user = blogger.user
-        current_blogger = request.user.blogger
+        if (request.user.is_anonymous):
+            return HttpResponseRedirect(reverse('Personal:loginregister'))
+        else:
+            blogger = self.get_object()
+            user = blogger.user
+            current_blogger = request.user.blogger
 
-        if "follow" in request.POST:
-            current_blogger.following_users.add(user)
-            user.blogger.follower.add(request.user)
-        elif "unfollow" in request.POST:
-            current_blogger.following_users.remove(user)
-            user.blogger.follower.remove(request.user)
+            if "follow" in request.POST:
+                current_blogger.following_users.add(user)
+                user.blogger.follower.add(request.user)
+            elif "unfollow" in request.POST:
+                current_blogger.following_users.remove(user)
+                user.blogger.follower.remove(request.user)
 
-        return redirect("Profile:profile", slug=blogger.slug)
+            return redirect("Profile:profile", slug=blogger.slug)
 
 
 class BloggerUpdateView(LoginRequiredMixin, UpdateView):

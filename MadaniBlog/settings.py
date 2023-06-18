@@ -18,6 +18,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 STATIC_DIR = os.path.join(BASE_DIR, "static")
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
 
 
 # Quick-start development settings - unsuitable for production

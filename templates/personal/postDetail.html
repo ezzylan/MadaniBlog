@@ -21,7 +21,7 @@
 					<img src="{% static 'images/blogpost_placeholder.png' %}" alt="{{post.slug}}" class="img-fluid m-2">
 				{% endif %}
             </div>
-            <div class="p-5">
+            <div class="p-2 text-justify">
                 {{singlePost.content}}
             </div>
             <div class=" row text-end mt-3 mb-3">
@@ -33,11 +33,11 @@
                         {% csrf_token %}
                         {{singlePost.blogger_set.count}}
                         {% if fav %}
-                            <button type = "submit" name="fav" class="icon-button" value="no" style="color:red">
+                            <button type = "submit" name="fav" class="icon-button" value="no" style="color:red;outline:none">
                                 {% bs_icon 'heart-fill'%}
                             </button>
                         {% else %}
-                        <button type = "submit" name="fav" class="icon-button"  style="color:red" value="yes" >
+                        <button type = "submit" name="fav" class="icon-button"  style="color:red;outline:none" value="yes" >
                             {% bs_icon 'heart' %}
                         </button>
                         {% endif %}
@@ -60,7 +60,7 @@
                     </div>
                     <div class="flex-grow-1 ms-2 ms-sm-3">
                         <div class="d-flex align-items-baseline">
-                            <h6 class="me-2">{{comment.blogger}}</h6>
+                            <h6 class="me-2">{{comment.blogger.get_full_name}}</h6>
                             <span class="text-muted">{{comment.published_date|date:'Y-m-d H:i'}}</span>
                         </div>
                         <div class="comment-body">

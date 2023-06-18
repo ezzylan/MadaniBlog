@@ -14,6 +14,7 @@
 
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/Profile.css' %}">
 
@@ -35,15 +36,16 @@
 					<button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 						{% bs_icon 'person-circle' %}&nbsp;
 						<div class="d-none d-sm-inline">
-							{{ user.first_name }}
+							{{ user.get_full_name }}
 						</div>
 					</button>
 					<div class="dropdown-menu dropdown-menu-end">
 						{% if user.id %}
 						<li><a class="dropdown-item" href="{% url 'Profile:profile' user.blogger.slug %}">My Profile</a></li>
 						<li><a class="dropdown-item" href="{% url 'Personal:view' %}">My Blog</a></li>
+						<li><a class="dropdown-item" href="{% url 'Personal:logout' %}">Log Out</a></li>
 						{% else %}
-						<li><a class="dropdown-item" href="{% url 'Personal:login' %}">Login</a></li>
+						<li><a class="dropdown-item" href="{% url 'Personal:loginregister' %}">Login</a></li>
 						{% endif %}
 
 					</div>
