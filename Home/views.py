@@ -7,6 +7,7 @@ from .models import Post,Category
 from django.contrib.auth.models import User
 from .forms import BlogSearchForm
 from PersonalBlog.forms import AddCommentsForm
+from django.db.models import Q
 
 def post_list(request):
     latest_posts = Post.objects.order_by('-creation_datetime')[:5]
@@ -90,7 +91,7 @@ def search(request):
         if form.is_valid():
             search_term = form.cleaned_data['search_term']
             post_results = list(all_posts.filter(title__icontains=search_term))
-            blogger_results = list(all_bloggers.filter(blogger__blog_title__icontains=search_term))
+            blogger_results = list(all_bloggers.filter(Q(first_name__icontains=search_term)|Q(last_name__icontains=search_term)))
 
     return render(request, 'Home/search_results.html', {'form': form, 'post_results': post_results, 'blogger_results': blogger_results, 'keyword': search_term})
 

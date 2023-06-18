@@ -2,6 +2,7 @@
 {% load static %}
 {% load bootstrap_icons %}
 {% load mathfilters %}
+{% load crispy_forms_tags %}
 {% block title %}
 Create Blog
 {% endblock %}
@@ -17,7 +18,7 @@ Create Blog
         <form method="POST"  enctype="multipart/form-data">
             <div class="form-floating">
                 {% csrf_token %}
-                {{ form.as_p }}
+                {{ form|crispy }}
                 <button class="btn btn-outline-dark" type="submit">Create/Edit Blog</button>
             </div>
         </form>

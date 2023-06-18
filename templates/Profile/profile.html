@@ -144,84 +144,112 @@
       </div>
       {% else %}
       <p class="text-body-secondary">You haven't started a blog yet. Start your blogging journey here...</p>
-      <a class="btn btn-outline-secondary" href="{% url 'Personal:createEditBlog' %}" role="button">
-        {% bs_icon 'arrow-up-right' %}&nbsp;Create a new blog
+       {% if user == blogger_user %}
+        <a class="btn btn-outline-secondary" href="{% url 'Personal:createEditBlog' %}" role="button">
+
+          {% bs_icon 'arrow-up-right' %}&nbsp;Create a new blog
+
       </a>
+        {% endif %}
       {% endif %}
     </div>
   </div>
 
   <!-- one row of three sections e.g. followers, following and favourite blog posts -->
-  <div class="row g-4">
-    <div class="col-md-4">
-      <div class="container p-3 me-1 border rounded">
-        <!-- List of followers  -->
-        {% if blogger_followers %}
-
-        <div class="container">
-          <div class="row g-0">
-            <h5>Followers</h5>
-            <div class="d-flex flex-column gap-2">
-              {% for follower in blogger_followers %}
-                {{ follower.first_name }}
-                {% if follower.blogger %}
-                  {% if follower != blogger_user %}
-                        <a href="{% url 'Personal:viewOther' follower.id %}">View Blog</a>
-                  {% endif %}
+  <div class="container mt-4 mb-4">
+    <div class="row border rounded text-justify p-4">
+      <div class="col-4 p-3">
+          <h5>Followers</h5>
+          <hr/>
+          <!-- List of followers  -->
+          {% if blogger_followers %}
+          {% for follower in blogger_followers %}
+          <div class="row border m-2 rounded p-2">
+            <div class="col-3 p-2">
+                {% if follower.profile_image %}
+                    <img class="avatar  border rounded-circle" src="{{ MEDIA_URL }}{{ follower.profile_image }}" >
+                {% else %}
+                    <img class="avatar  border rounded-circle" src="{% static 'images/placeholder-profile-icon.jpg' %}" >
                 {% endif %}
-              {% endfor %}
             </div>
-          </div>
-
-        </div>
-
-        {% endif %}
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="container p-3 me-1 border rounded">
-        <!-- List of following -->
-        {% if blogger_followings %}
-
-        <div class="container">
-          <div class="row g-0">
-            <h5>Following</h5>
-            <div class="d-flex flex-column gap-2">
-              {% for following in blogger_followings %}
-                {{ following.first_name }}
-                {% if following.blogger %}
-                  <a href="{% url 'Personal:viewOther' following.id %}">View Blog</a>
+            <div class="col-6 p-2">
+                {% if follower.first_name or follower.last_name %}
+                    {{follower.first_name}} {{follower.last_name}}
+                {% else %}
+                    No Name
                 {% endif %}
-              {% endfor %}
+            </div>
+            <div class="col-3 p-2">
+              <a href="{% url 'Profile:profile' follower.blogger.slug %}">
+                  <button class="btn btn-secondary rounded-1  " type="button">
+                      View Profile
+                  </button>
+              </a>
             </div>
           </div>
-
-        </div>
-
-        {% endif %}
+          {% endfor %}
+          {% else %}
+          No Followers Yet
+          {% endif %}
       </div>
-    </div>
-    <div class="col-md-4">
-      <div class="container p-3 me-1 border rounded">
-        <!-- List of favourite blog posts -->
-        {% if fav_posts %}
-
-        <div class="container">
-          <div class="row g-0">
-            <h5>Favourite Posts</h5>
-            <div class="d-flex flex-column gap-2">
-              {% for post in fav_posts %}
-              <div class="mb-2">{{ post.title }} by {{ post.author }}</div>
-              <p class="mb-2">{{ post.content|truncatechars:100 }}</p>
-              <a href="{% url 'Home:post_detail' post.id %}" class="post-link icon-link gap-1 ">Continue reading</a>
-              {% endfor %}
+      <div class="col-4 p-3">
+          <h5>Followerings</h5>
+          <hr/>
+          <!-- List of followers  -->
+          {% if blogger_followings %}
+          {% for following in blogger_followings %}
+          <div class="row border m-2 rounded p-2">
+            <div class="col-3 p-2">
+               {% if follower.profile_image %}
+                    <img class="avatar  border rounded-circle" src="{{ MEDIA_URL }}{{ following.profile_image }}" >
+                {% else %}
+                    <img class="avatar  border rounded-circle" src="{% static 'images/placeholder-profile-icon.jpg' %}" >
+                {% endif %}
+            </div>
+            <div class="col-6 p-2">
+              {% if following.first_name or following.last_name %}
+                    {{following.first_name}} {{following.last_name}}
+                {% else %}
+                    No Name
+                {% endif %}
+            </div>
+            <div class="col-3 p-2">
+              <a href="{% url 'Profile:profile' following.blogger.slug %}">
+                  <button class="btn btn-secondary rounded-1  " type="button">
+                      View Profile
+                  </button>
+              </a>
             </div>
           </div>
-        </div>
-
-        {% endif %}
+          {% endfor %}
+          {% else %}
+          No Followering Yet
+          {% endif %}
+      </div>
+      <div class="col-4 p-3">
+          <h5>Favourite Posts</h5>
+          <hr/>
+          <!-- List of followers  -->
+          {% if fav_posts %}
+          {% for post in fav_posts %}
+          <div class="row border m-2 rounded p-2">
+            <div class="col-9 p-2">
+                <b>{{ post.title }}</b>
+                </br>
+              by {{ post.author }}
+            </div>
+            <div class="col-3 p-2 ">
+              <a href="{% url 'Home:post_detail' post.id %}" class="post-link icon-link gap-1 ">
+                  <button class="btn btn-secondary rounded-1  " type="button">Detail</button>
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+          {% else %}
+          No Favourite Posts Yet
+          {% endif %}
       </div>
     </div>
-  </div>
+   </div>
 </div>
 {% endblock %}

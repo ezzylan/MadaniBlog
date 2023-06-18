@@ -28,10 +28,13 @@ def register_login(request):
         if form.is_valid():
             form.save()
             user = form.cleaned_data.get('username')
-            messages.success(request, "Account was created for " + user)
+            form = UserCreationForm()
+            messages.success(request, "Account was created for " + user + ". Please login again")
             return HttpResponseRedirect(reverse('Home:home'))
         else:
+            messages.error(request, 'Please correct the following errors')
             return HttpResponseRedirect(reverse('Personal:loginregister'))
+
     elif request.POST.get('submit') == 'sign_in':
         username = request.POST.get('username')
         password = request.POST.get('password1')
@@ -77,7 +80,7 @@ class ManagePostList(mixins.LoginRequiredMixin, generic.ListView):
 
 
 class AddPostView(mixins.LoginRequiredMixin, generic.TemplateView):
-    login_url = '/personal/login/'
+    login_url = '/personal/loginregister/'
     template_name = "personal/addBlog.html"
 
     def get(self, request):
@@ -113,7 +116,7 @@ class AddPostView(mixins.LoginRequiredMixin, generic.TemplateView):
 
 
 class PostCommentDetailView(mixins.LoginRequiredMixin, generic.TemplateView):
-    login_url = '/personal/login/'
+    login_url = '/personal/loginregister/'
     template_name = "personal/postDetail.html"
 
     def get(self, request, slug):
@@ -168,7 +171,7 @@ class editPostView(mixins.LoginRequiredMixin, generic.TemplateView):
             messages.success(request, 'The post has been updated successfully.')
             return HttpResponseRedirect(reverse('Personal:manage'))
         else:
-            messages.error(request, 'Please correct the following errors:')
+            messages.error(request, 'Please correct the following errors')
             return HttpResponseRedirect(reverse('Personal:postDetail', kwargs={'slug': slug}))
 
 

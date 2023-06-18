@@ -36,8 +36,7 @@ class CreateBlog(ModelForm):
                                                             'following_users','follower','fav_post','slug']
         widgets ={
              'blog_title': forms.TextInput(attrs={'class': 'form-control '}),
-            'blog_description':forms.Textarea(attrs={'class':'form-control'}),
-            'blog_image':forms.FileInput(attrs={'class':'form-control w-50'})
+            'blog_description':forms.Textarea(attrs={'class':'form-control'})
         }
     def __init__(self, *args, **kwargs):
         # first call parent's constructor

@@ -92,8 +92,14 @@ Post Detail
             <div class="col-md-4">
                 <div class="position-sticky" style="top: 2rem;">
                     <div class="p-4 mb-3 bg-body-tertiary rounded">
-                        <h4 class="fst-italic">About Blogger</h4>
-                        <p class="mb-0">{{post.author.profile.blog_description|truncatechars:100 }}</p>
+                        <h4 class="fst-italic">About Blog</h4>
+                        <p class="mb-0">
+                            {% if post.author.blogger.blog_description %}
+                                {{post.author.blogger.blog_description|truncatechars:100 }}
+                            {% else %}
+                                No Written Description
+                            {% endif %}
+                        </p>
                         {% if request.user.id == post.author.id %}
                         <a href="{% url 'Personal:view' %}">Read More</a>
                         {% else %}
