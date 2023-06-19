@@ -159,7 +159,7 @@
   <div class="container mt-4 mb-4">
     <div class="row border rounded text-justify p-4">
       <div class="col-4 p-3">
-          <h5>Followers {{ blogger_followers.count}}</h5>
+          <h5>Followers - {{ blogger_followers.count}}</h5>
           <hr/>
           <!-- List of followers  -->
           {% if blogger_followers %}
@@ -193,7 +193,7 @@
           {% endif %}
       </div>
       <div class="col-4 p-3">
-          <h5>Followerings {{ blogger_followings.count}}</h5>
+          <h5>Bloggers I Follow - {{ blogger_followings.count}}</h5>
           <hr/>
           <!-- List of followers  -->
           {% if blogger_followings %}
@@ -223,11 +223,11 @@
           </div>
           {% endfor %}
           {% else %}
-          No Followering Yet
+          No Following Yet
           {% endif %}
       </div>
       <div class="col-4 p-3">
-          <h5>Favourite Posts {{ fav_posts.count}}</h5>
+          <h5>Favourite Posts - {{ fav_posts.count}}</h5>
           <hr/>
           <!-- List of followers  -->
           {% if fav_posts %}
